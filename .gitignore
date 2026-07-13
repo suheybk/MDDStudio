@@ -1,0 +1,8 @@
+# local / editor
+.claude/
+*.log
+.DS_Store
+Thumbs.db
+
+# internal notes (not for the public site repo)
+YAYIN-KONTROL-LISTESI.md
