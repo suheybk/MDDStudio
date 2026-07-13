@@ -369,6 +369,49 @@
   </div>
 </div>
 
+<!-- ================= CHECKOUT (iyzico) ================= -->
+<div id="checkout-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="co-box">
+    <h3>Teslimat &amp; Ödeme</h3>
+    <form id="checkout-form" onsubmit="submitCheckout(event)" autocomplete="on">
+      <div class="co-row">
+        <input name="name" placeholder="Ad" required autocomplete="given-name">
+        <input name="surname" placeholder="Soyad" required autocomplete="family-name">
+      </div>
+      <input name="email" type="email" placeholder="E-posta" required autocomplete="email">
+      <input name="phone" type="tel" placeholder="Telefon (+90…)" required autocomplete="tel">
+      <input name="address" placeholder="Adres" required autocomplete="street-address">
+      <input name="city" placeholder="Şehir" required autocomplete="address-level1">
+      <div id="checkout-error" class="co-err"></div>
+      <button type="submit" id="pay-btn" class="co-pay">iyzico ile Öde</button>
+    </form>
+    <p class="co-note">Ödeme <b>iyzico</b> güvenli sayfasında alınır; kart bilgileriniz sitemizde saklanmaz. 3D&nbsp;Secure destekli.</p>
+    <button class="co-close" onclick="document.getElementById('checkout-modal').classList.remove('open')">Kapat</button>
+  </div>
+</div>
+<style>
+#checkout-modal{position:fixed;inset:0;z-index:80;background:rgba(20,20,20,.42);
+  display:none;align-items:center;justify-content:center;padding:20px}
+#checkout-modal.open{display:flex}
+#checkout-modal .co-box{background:var(--paper);border:1px solid var(--line);border-radius:16px;
+  max-width:440px;width:100%;padding:28px;max-height:92vh;overflow:auto}
+#checkout-modal h3{font-size:16px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:18px}
+#checkout-form{display:flex;flex-direction:column;gap:11px}
+#checkout-form .co-row{display:flex;gap:11px}
+#checkout-form .co-row input{flex:1;min-width:0}
+#checkout-form input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+  background:#fbfaf5;font:inherit;font-size:14px;color:var(--ink)}
+#checkout-form input:focus{outline:none;border-color:var(--ink)}
+.co-pay{margin-top:6px;background:var(--ink);color:var(--paper);border:none;border-radius:10px;
+  padding:14px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.co-pay:hover{opacity:.9}.co-pay:disabled{opacity:.5;cursor:default}
+.co-err{color:#a2483a;font-size:13px;min-height:18px;line-height:1.4}
+.co-note{color:var(--muted);font-size:12px;line-height:1.6;margin-top:14px}
+.co-close{margin-top:14px;background:none;border:1px solid var(--line);border-radius:100px;
+  padding:8px 20px;font-size:12px;letter-spacing:.1em;color:var(--muted);cursor:pointer}
+.co-close:hover{border-color:var(--ink);color:var(--ink)}
+</style>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 /* ================================================================
@@ -580,7 +623,27 @@ function openDrawer(){ document.getElementById("drawer").classList.add("open");
 function closeDrawer(){ document.getElementById("drawer").classList.remove("open");
   document.getElementById("overlay").classList.remove("open"); }
 addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
-function checkout(){ if (!cart.size){ closeDrawer(); return; } openLegal("odeme"); }
+function checkout(){ if (!cart.size){ closeDrawer(); return; } closeDrawer();
+  document.getElementById("checkout-error").textContent="";
+  document.getElementById("checkout-modal").classList.add("open"); }
+async function submitCheckout(e){
+  e.preventDefault();
+  const f=e.target, btn=document.getElementById("pay-btn"), err=document.getElementById("checkout-error");
+  const items=[...cart.entries()].map(([id,qty])=>({id,qty}));
+  if(!items.length){ err.textContent="Sepetiniz boş."; return; }
+  const fd=new FormData(f);
+  const buyer={name:fd.get("name"),surname:fd.get("surname"),email:fd.get("email"),
+    phone:fd.get("phone"),address:fd.get("address"),city:fd.get("city")};
+  err.textContent=""; btn.disabled=true; btn.textContent="Yönlendiriliyor…";
+  try{
+    const r=await fetch("/api/checkout",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({items,buyer})});
+    const d=await r.json();
+    if(d.paymentPageUrl){ location.href=d.paymentPageUrl; return; }
+    err.textContent=(d.error||"Ödeme başlatılamadı.")+(d.code?" ("+d.code+")":"");
+  }catch(ex){ err.textContent="Bağlantı hatası, tekrar deneyin."; }
+  btn.disabled=false; btn.textContent="iyzico ile Öde";
+}
 
 /* ================================================================
    LEGAL — DİDA Tasarım Ajansı Ltd. Şti.
