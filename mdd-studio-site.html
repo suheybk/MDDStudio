@@ -44,12 +44,12 @@
   "alternateName": "مدد · Midad Müddet Meded",
   "description": "Estetik ile imanı buluşturan tasarımlar: sticker setleri, ibadet defterleri, dua kartları ve çocuklar için öğretici koleksiyonlar.",
   "url": "https://mddstudio.co/",
-  "email": "info@mddstudio.co",
+  "email": "info@mddstudio.com",
   "brand": { "@type": "Brand", "name": "MDD Studio" },
   "parentOrganization": { "@type": "Organization", "name": "DİDA Tasarım Ajansı Ltd. Şti." },
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "Kuzey Ankara Camii Külliyesi",
+    "streetAddress": "Büyük Ankara Camii Külliyesi, Şenyuva, Şeyhan Cd. No:11 C D:12",
     "addressLocality": "Keçiören",
     "addressRegion": "Ankara",
     "addressCountry": "TR"
@@ -320,10 +320,11 @@
   <div class="prose">
     <p class="t" data-i18n="contact_intro"></p>
     <div class="contact-box">
-      <div><b class="t" data-i18n="c_email"></b><span>info@mddstudio.co</span></div>
-      <div><b class="t" data-i18n="c_store"></b><span>Kuzey Ankara Camii Külliyesi, Keçiören / Ankara</span></div>
+      <div><b class="t" data-i18n="c_email"></b><span>info@mddstudio.com</span></div>
+      <div><b class="t" data-i18n="c_store"></b><span>Büyük Ankara Camii Külliyesi, Şenyuva, Şeyhan Cd. No:11 C D:12, 06300 Keçiören/Ankara</span></div>
+      <div><b>Telefon</b><span>0533 486 28 99</span></div>
       <div><b>Instagram</b><span>@mddstudio</span></div>
-      <div><b class="t" data-i18n="c_firm"></b><span>DİDA Tasarım Ajansı Ltd. Şti.</span></div>
+      <div><b class="t" data-i18n="c_firm"></b><span>DİDA Tasarım Ajansı Ltd. Şti. &middot; MERSİS 0295116797600001</span></div>
     </div>
     <div class="store-links">
       <a class="store-link" href="https://www.etsy.com/shop/MDDStudio" target="_blank" rel="noopener">Etsy <small class="t" data-i18n="c_intl"></small></a>
@@ -339,9 +340,12 @@
     <a href="https://www.shopier.com/mddstudio" target="_blank" rel="noopener">Shopier</a>
   </div>
   <div class="legal">
-    <a href="#" class="t" data-i18n="l_mesafeli" onclick="openLegal('mesafeli');return false"></a>
-    <a href="#" class="t" data-i18n="l_iade" onclick="openLegal('iade');return false"></a>
-    <a href="#" class="t" data-i18n="l_kvkk" onclick="openLegal('kvkk');return false"></a>
+    <a href="#" onclick="openLegal('onbilgi');return false">Ön Bilgilendirme Formu</a>
+    <a href="#" onclick="openLegal('mesafeli');return false">Mesafeli Satış Sözleşmesi</a>
+    <a href="#" onclick="openLegal('iade');return false">İade &amp; Teslimat</a>
+    <a href="#" onclick="openLegal('kvkk');return false">KVKK Aydınlatma</a>
+    <a href="#" onclick="openLegal('gizlilik');return false">Gizlilik &amp; Çerez</a>
+    <a href="#" onclick="openLegal('kosullar');return false">Kullanım Koşulları</a>
   </div>
 </footer>
 
@@ -650,57 +654,115 @@ async function submitCheckout(e){
    Bağlayıcı metinler Türkçe sunulur. [KÖŞELİ] alanlar doldurulacak.
 ================================================================ */
 const LEGAL = {
+onbilgi: ["Ön Bilgilendirme Formu", `
+<h4>1. Satıcı Bilgileri</h4>
+<p><b>Ünvan:</b> DİDA Tasarım Ajansı Ltd. Şti. (“MDD Studio”)<br>
+<b>Adres:</b> Büyük Ankara Camii Külliyesi, Şenyuva, Şeyhan Cd. No:11 C Blok D:12, 06300 Keçiören/Ankara<br>
+<b>MERSİS:</b> 0295116797600001 &middot; <b>Vergi Dairesi/No:</b> Dışkapı V.D. / 2951167976<br>
+<b>Telefon:</b> 0533 486 28 99 &middot; <b>E-posta:</b> info@mddstudio.com &middot; <b>Web:</b> mddstudio.co</p>
+<h4>2. Ürünün Temel Nitelikleri ve Fiyatı</h4>
+<p>Sipariş konusu ürün(ler)in türü, adedi ve satış bedeli sipariş özetinde yer aldığı gibidir. Tüm fiyatlara KDV dâhildir. Sipariş özetinde gösterilen toplam bedel, ürün bedeli ile varsa kargo ücretinin toplamıdır.</p>
+<h4>3. Ödeme ve Teslimat</h4>
+<p>Ödemeler, lisanslı ödeme kuruluşu <b>iyzico</b> altyapısı üzerinden (3D Secure dâhil) alınır; kart bilgileri Satıcı tarafından görülmez ve saklanmaz. Ürünler, sipariş onayından itibaren yasal azami 30 gün içinde anlaşmalı kargo ile Alıcı'nın bildirdiği adrese teslim edilir. Kişiye özel üretilen ürünlerde üretim süresi bu süreye eklenir ve ürün sayfasında belirtilir.</p>
+<h4>4. Cayma Hakkı</h4>
+<p>Alıcı, ürünü teslim aldığı tarihten itibaren 14 (on dört) gün içinde hiçbir gerekçe göstermeksizin ve cezai şart ödemeksizin cayma hakkına sahiptir. Cayma bildirimi bu süre içinde info@mddstudio.com adresine yazılı olarak iletilir.</p>
+<h4>5. Cayma Hakkının İstisnaları</h4>
+<p>Aşağıdaki ürünlerde cayma hakkı kullanılamaz (Mesafeli Sözleşmeler Yönetmeliği md. 15):</p>
+<ul>
+<li>Alıcı'nın istekleri veya kişisel ihtiyaçları doğrultusunda kişiye/isme özel hazırlanan ürünler (özel baskı sticker, isimli/özel tasarım kart, ölçüye özel baskı vb.),</li>
+<li>Tesliminden sonra ambalajı açılmış olup iadesi sağlık/hijyen açısından uygun olmayan ürünler,</li>
+<li>Elektronik ortamda anında ifa edilen veya Alıcı'ya anında teslim edilen dijital içerikler (PDF boyama, dijital şablon vb.).</li>
+</ul>
+<h4>6. Şikâyet ve Yetkili Merci</h4>
+<p>Şikâyet ve itirazlarınızı yukarıdaki iletişim kanallarına iletebilirsiniz. Uyuşmazlıklarda, Ticaret Bakanlığı'nca her yıl belirlenen parasal sınırlar dâhilinde Alıcı'nın veya Satıcı'nın yerleşim yerindeki <b>Tüketici Hakem Heyetleri</b>, bu sınırı aşan hâllerde <b>Tüketici Mahkemeleri</b> yetkilidir.</p>
+<h4>7. Onay</h4>
+<p>Alıcı, siparişi onaylamadan önce işbu Ön Bilgilendirme Formu'nu okuduğunu, anladığını ve teyit ettiğini kabul eder.</p>`],
+
 mesafeli: ["Mesafeli Satış Sözleşmesi", `
 <h4>1. Taraflar</h4>
-<p><b>Satıcı:</b> DİDA Tasarım Ajansı Ltd. Şti. — Adres: [TİCARİ ADRES], Keçiören/Ankara · Mersis: [MERSİS NO] · E-posta: info@mddstudio.co<br>
-<b>Alıcı:</b> Sipariş formunda bilgileri yer alan gerçek/tüzel kişi.</p>
+<p><b>SATICI:</b> <b>Ünvan:</b> DİDA Tasarım Ajansı Ltd. Şti. (“MDD Studio”)<br>
+<b>Adres:</b> Büyük Ankara Camii Külliyesi, Şenyuva, Şeyhan Cd. No:11 C Blok D:12, 06300 Keçiören/Ankara<br>
+<b>MERSİS:</b> 0295116797600001 &middot; <b>Vergi Dairesi/No:</b> Dışkapı V.D. / 2951167976<br>
+<b>Telefon:</b> 0533 486 28 99 &middot; <b>E-posta:</b> info@mddstudio.com &middot; <b>Web:</b> mddstudio.co</p>
+<p><b>ALICI:</b> Sipariş formunda ve ödeme sayfasında bilgileri yer alan gerçek/tüzel kişi.</p>
 <h4>2. Konu</h4>
-<p>İşbu sözleşme, Alıcı'nın mddstudio.co üzerinden elektronik ortamda sipariş verdiği ürünlerin satışı ve teslimi ile ilgili olarak 6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği hükümleri gereğince tarafların hak ve yükümlülüklerini düzenler.</p>
-<h4>3. Ürün ve Ödeme</h4>
-<p>Ürünün türü, adedi, satış bedeli ve ödeme şekli sipariş özetinde belirtildiği gibidir ve Alıcı tarafından onaylanmıştır. Ödemeler iyzico güvenli ödeme altyapısı üzerinden alınır; Satıcı, kart bilgilerini saklamaz. Fiyatlara KDV dahildir. Kargo bedeli, sipariş özetinde ayrıca gösterilir ve Alıcı'ya aittir (kampanyalar saklıdır).</p>
+<p>İşbu sözleşme, Alıcı'nın mddstudio.co üzerinden elektronik ortamda siparişini verdiği, nitelikleri ve bedeli sipariş özetinde belirtilen ürünlerin satışı ve teslimi ile ilgili olarak 6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği uyarınca tarafların hak ve yükümlülüklerini düzenler.</p>
+<h4>3. Ürün, Bedel ve Ödeme</h4>
+<p>Ürünlerin türü, adedi, satış bedeli ve ödeme şekli sipariş özetinde belirtildiği gibidir ve Alıcı tarafından onaylanmıştır. Fiyatlara KDV dâhildir; kargo bedeli sipariş özetinde ayrıca gösterilir ve aksi belirtilmedikçe Alıcı'ya aittir. Ödemeler <b>iyzico</b> güvenli altyapısı ile alınır; Satıcı kart bilgilerini saklamaz. <b>Satıcı, açık maddi/yazım hatası sonucu yanlış gösterilen fiyat veya stok bilgilerinde siparişi onaylamama ve iptal etme hakkını saklı tutar; bu hâlde tahsil edilen bedel iade edilir.</b></p>
 <h4>4. Teslimat</h4>
-<p>Ürünler, sipariş onayından itibaren en geç 30 (otuz) gün içinde anlaşmalı kargo firması ile Alıcı'nın bildirdiği adrese gönderilir. Kişiye özel üretilen ürünlerde üretim süresi ürün sayfasında ayrıca belirtilir ve bu süre teslim süresine eklenir. Alıcı, teslim sırasında ambalajı kontrol etmekle; hasar hâlinde kargo görevlisine tutanak tutturarak ürünü teslim almamakla yükümlüdür. Tutanaksız teslim alınan ürünlerde taşıma hasarı sorumluluğu kabul edilmez.</p>
-<h4>5. Cayma Hakkı</h4>
-<p>Alıcı, ürünü teslim aldığı tarihten itibaren 14 (on dört) gün içinde gerekçe göstermeksizin cayma hakkına sahiptir. Cayma bildirimi info@mddstudio.co adresine yazılı olarak yapılır. <b>İstisnalar:</b> Alıcı'nın istekleri doğrultusunda kişiye özel hazırlanan ürünler (isme özel baskı, ölçüye özel üretim vb.), ambalajı açılmış hijyen açısından iadeye uygun olmayan ürünler ve elektronik ortamda anında ifa edilen dijital içerikler cayma hakkı kapsamı dışındadır.</p>
-<h4>6. Uyuşmazlık</h4>
-<p>İşbu sözleşmeden doğan uyuşmazlıklarda, Ticaret Bakanlığı'nca ilan edilen parasal sınırlar dahilinde Alıcı'nın veya Satıcı'nın yerleşim yerindeki Tüketici Hakem Heyetleri; sınırı aşan hâllerde Tüketici Mahkemeleri yetkilidir.</p>
-<h4>7. Yürürlük</h4>
-<p>Alıcı, sipariş onayı ile işbu sözleşmenin ve Ön Bilgilendirme Formu'nun tüm koşullarını kabul etmiş sayılır.</p>`],
+<p>Ürünler, sipariş onayından itibaren en geç 30 (otuz) gün içinde anlaşmalı kargo firması ile gönderilir. Kişiye özel üretilen ürünlerde üretim süresi bu süreye eklenir. <b>Alıcı'nın beyan ettiği adres/iletişim bilgilerinin hatalı veya eksik olmasından doğan gecikme ve zararlardan Satıcı sorumlu değildir.</b> Alıcı, teslim sırasında paketi kontrol etmekle; hasar/ezik/kırık durumunda kargo görevlisine <b>tutanak</b> tutturarak ürünü teslim almamakla yükümlüdür. <b>Tutanaksız teslim alınan ürünlerde taşıma kaynaklı hasar sorumluluğu kabul edilmez.</b></p>
+<h4>5. Cayma Hakkı ve İstisnaları</h4>
+<p>Alıcı, teslim tarihinden itibaren 14 gün içinde gerekçe göstermeksizin cayabilir; bildirim info@mddstudio.com adresine yazılı yapılır. <b>İstisnalar:</b> kişiye/isme özel hazırlanan ürünler, ambalajı açılmış ve hijyen açısından iadeye uygun olmayan ürünler ve anında ifa edilen dijital içerikler cayma hakkı kapsamı dışındadır (Yönetmelik md. 15). Cayma hâlinde ürün; faturası ve tüm parçalarıyla, kullanılmamış ve yeniden satılabilir durumda iade edilir. İade, Satıcı'nın bildirdiği anlaşmalı kargo firması ile yapıldığında iade kargo bedeli Alıcı'ya yüklenmez; bunun dışındaki taşıyıcılarla yapılan gönderimlerde masraf ve kayıp/hasar riski Alıcı'ya aittir.</p>
+<h4>6. Bedel İadesi</h4>
+<p>Cayma hâlinde bedel, ürünün Satıcı'ya ulaşması ve uygunluk kontrolünü takiben 14 gün içinde, ödemenin yapıldığı yöntemle (iyzico aracılığıyla) iade edilir. Bankaya/karta yansıma süresi Satıcı'nın kontrolünde değildir.</p>
+<h4>7. Temerrüt</h4>
+<p>Alıcı, kredi kartı ile ödemede temerrüde düşerse, kart sahibi banka ile arasındaki sözleşme çerçevesinde faiz ödeyeceğini ve bankaya karşı sorumlu olacağını kabul eder.</p>
+<h4>8. Mücbir Sebep</h4>
+<p>Doğal afet, yangın, salgın, grev, tedarik/kargo aksaklıkları gibi mücbir sebeplerde Satıcı'nın edim süresi durur; makul sürede ifa edilemezse taraflar sözleşmeyi feshedebilir ve tahsil edilen bedel iade edilir.</p>
+<h4>9. Yetkili Merci ve Yürürlük</h4>
+<p>Uyuşmazlıklarda Ticaret Bakanlığı'nca ilan edilen parasal sınırlar dâhilinde Tüketici Hakem Heyetleri; aşan hâllerde Tüketici Mahkemeleri yetkilidir. Alıcı, sipariş onayı ile işbu sözleşmenin ve Ön Bilgilendirme Formu'nun tüm koşullarını kabul etmiş sayılır.</p>`],
 
-iade: ["İade & Cayma Hakkı", `
-<h4>Cayma Süresi</h4>
-<p>Teslim tarihinden itibaren 14 (on dört) gün içinde, gerekçe göstermeksizin cayma hakkınızı kullanabilirsiniz. Bildirim için info@mddstudio.co adresine sipariş numaranızla birlikte yazınız.</p>
+iade: ["İade & Teslimat", `
+<h4>Teslimat Süresi</h4>
+<p>Siparişler ödeme onayından sonra hazırlanır ve en geç 30 gün içinde anlaşmalı kargo ile gönderilir; hazır ürünler uygulamada çok daha kısa sürede kargolanır. Kişiye özel üretilen ürünlerde üretim süresi teslimata eklenir.</p>
+<h4>Kargo ve Hasar</h4>
+<p>Kargo bedeli sipariş özetinde gösterilir (kampanyalar saklıdır). Paketinizi teslim alırken kontrol ediniz; hasar/ezik durumunda kargo görevlisine <b>tutanak</b> tutturup ürünü teslim almayınız. Tutanaksız teslim alınan ürünlerde taşıma hasarı sorumluluğu kabul edilmez.</p>
+<h4>Cayma Süresi (14 Gün)</h4>
+<p>Teslim tarihinden itibaren 14 gün içinde gerekçe göstermeksizin cayabilirsiniz. Bildirim için sipariş numaranızla info@mddstudio.com adresine yazınız.</p>
 <h4>Cayma Hakkının İstisnaları</h4>
 <ul>
-<li>İsme/kişiye özel hazırlanan ürünler (özel baskı sticker, isimli defter, özel ölçü 3D baskı vb.)</li>
-<li>Ambalajı açıldıktan sonra hijyen ve sağlık açısından iadeye uygun olmayan ürünler</li>
-<li>Elektronik ortamda anında teslim edilen dijital dosyalar (PDF boyama, şablon vb.)</li>
+<li>Kişiye/isme özel hazırlanan ürünler (özel baskı sticker, isimli/özel tasarım kart, özel ölçü baskı vb.),</li>
+<li>Ambalajı açıldıktan sonra hijyen açısından iadeye uygun olmayan ürünler,</li>
+<li>Anında teslim edilen dijital dosyalar (PDF boyama, şablon vb.).</li>
 </ul>
 <h4>İade Koşulları</h4>
-<p>Ürün; kullanılmamış, yeniden satılabilir durumda ve orijinal ambalajıyla, faturasıyla birlikte iade edilmelidir. Onaylanan cayma bildirimlerinde ürün, Satıcı'nın bildireceği anlaşmalı kargo firması ile gönderilir; anlaşmalı kargo dışında yapılan gönderimlerin bedeli Alıcı'ya aittir ve kaybolma/hasar riski gönderene aittir.</p>
+<p>Ürün; kullanılmamış, yeniden satılabilir durumda, orijinal ambalajı ve faturasıyla iade edilmelidir. İade, Satıcı'nın bildireceği anlaşmalı kargo firması ile gönderildiğinde iade kargo bedeli sizden alınmaz; farklı taşıyıcıyla yapılan gönderimin bedeli ve kaybolma/hasar riski gönderene aittir.</p>
 <h4>Bedel İadesi</h4>
-<p>Ürünün Satıcı'ya ulaşmasını ve uygunluk kontrolünü takiben, ödeme bedeli 14 (on dört) gün içinde, ödemenin yapıldığı yöntemle (iyzico aracılığıyla) iade edilir. Bankanızın hesabınıza yansıtma süresi Satıcı'nın kontrolünde değildir.</p>
+<p>Ürünün Satıcı'ya ulaşıp uygunluk kontrolünden geçmesini takiben 14 gün içinde ödeme yönteminize (iyzico) iade edilir.</p>
 <h4>Ayıplı Ürün</h4>
-<p>Üretim kaynaklı ayıplı ürünlerde tüm kargo bedelleri Satıcı'ya aittir; Alıcı dilerse ücretsiz değişim, dilerse bedel iadesi talep edebilir. Kargo hasarlarında teslim anında tutanak şarttır (bkz. Mesafeli Satış Sözleşmesi md. 4).</p>`],
+<p>Üretimden kaynaklı ayıplı ürünlerde kargo bedelleri Satıcı'ya aittir; dilerseniz ücretsiz değişim, dilerseniz bedel iadesi talep edebilirsiniz.</p>`],
 
 kvkk: ["KVKK Aydınlatma Metni", `
 <h4>Veri Sorumlusu</h4>
-<p>DİDA Tasarım Ajansı Ltd. Şti. ("Şirket"), 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca veri sorumlusudur.</p>
+<p>DİDA Tasarım Ajansı Ltd. Şti. (“Şirket”), 6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) uyarınca veri sorumlusudur. İletişim: Büyük Ankara Camii Külliyesi, Şenyuva, Şeyhan Cd. No:11 C Blok D:12, Keçiören/Ankara &middot; info@mddstudio.com &middot; 0533 486 28 99</p>
 <h4>İşlenen Veriler ve Amaçlar</h4>
-<p>Sipariş sürecinde ad-soyad, iletişim ve teslimat adresi bilgileriniz; sözleşmenin kurulması ve ifası, siparişin teslimi, fatura düzenlenmesi ve yasal yükümlülüklerin yerine getirilmesi amaçlarıyla işlenir. <b>Ödeme (kart) bilgileriniz Şirket tarafından işlenmez ve saklanmaz;</b> ödeme işlemleri lisanslı ödeme kuruluşu iyzico tarafından gerçekleştirilir.</p>
+<p>Sipariş sürecinde ad-soyad, iletişim (e-posta, telefon) ve teslimat adresi bilgileriniz; sözleşmenin kurulması ve ifası, siparişin teslimi, faturalandırma, iletişim ve yasal yükümlülüklerin yerine getirilmesi amaçlarıyla işlenir. <b>Kart/ödeme bilgileriniz Şirket tarafından işlenmez ve saklanmaz;</b> ödeme işlemleri lisanslı ödeme kuruluşu iyzico tarafından gerçekleştirilir.</p>
 <h4>Aktarım</h4>
-<p>Verileriniz; teslimat için anlaşmalı kargo firmasına, ödeme için iyzico'ya, yasal yükümlülükler kapsamında yetkili kamu kurumlarına ve muhasebe/fatura süreçleri için mali müşavire, amaçla sınırlı olarak aktarılabilir. Yurt dışına aktarım yapılmaz.</p>
+<p>Verileriniz; teslimat için anlaşmalı kargo firmasına, ödeme için iyzico'ya, barındırma/altyapı için Cloudflare'e, muhasebe/fatura için mali müşavire ve yasal yükümlülükler kapsamında yetkili kamu kurumlarına, amaçla sınırlı olarak aktarılabilir.</p>
 <h4>Hukuki Sebep ve Saklama</h4>
-<p>Veriler; KVKK md. 5/2 (c) sözleşmenin ifası ve (ç) hukuki yükümlülük sebeplerine dayanılarak işlenir; ilgili mevzuatta öngörülen süreler (vergi mevzuatı gereği asgari 5, TTK gereği 10 yıl) boyunca saklanır ve sonrasında imha edilir.</p>
-<h4>Haklarınız</h4>
-<p>KVKK md. 11 kapsamındaki taleplerinizi (öğrenme, düzeltme, silme, itiraz vb.) info@mddstudio.co adresine iletebilirsiniz. Başvurular en geç 30 gün içinde yanıtlanır.</p>
-<h4>Çerezler</h4>
-<p>Sitemiz, temel işlevler (dil tercihi, sepet oturumu) için zorunlu çerezler kullanır; pazarlama amaçlı üçüncü taraf çerezi kullanılmaz.</p>`],
+<p>Veriler KVKK md. 5/2 (c) sözleşmenin ifası ve (ç) hukuki yükümlülük sebeplerine dayanılarak işlenir; ilgili mevzuattaki süreler (vergi mevzuatı gereği asgari 5, TTK gereği 10 yıl) boyunca saklanır, sonrasında imha edilir.</p>
+<h4>Haklarınız (md. 11)</h4>
+<p>Kişisel verilerinizin işlenip işlenmediğini öğrenme, bilgi ve düzeltme talep etme, silinmesini/yok edilmesini isteme, aktarıldığı üçüncü kişileri öğrenme ve işleme itiraz etme haklarına sahipsiniz. Taleplerinizi info@mddstudio.com adresine iletebilirsiniz; başvurular en geç 30 gün içinde yanıtlanır.</p>`],
 
-odeme: ["Ödeme — iyzico", `
-<p>Bu prototipte ödeme adımı henüz canlı değildir. Yayına alınırken sepet, Cloudflare Workers üzerinde çalışan backend aracılığıyla <b>iyzico Ödeme Formu</b>'na bağlanacak; 3D Secure dahil tüm kart işlemleri iyzico güvencesinde gerçekleşecektir.</p>
-<p>Kart bilgileri hiçbir aşamada mddstudio.co sunucularında tutulmaz.</p>`]
+gizlilik: ["Gizlilik & Çerez Politikası", `
+<h4>Genel</h4>
+<p>MDD Studio (DİDA Tasarım Ajansı Ltd. Şti.) olarak gizliliğinize önem veriyoruz. Bu politika, mddstudio.co'yu kullanırken verilerinizin nasıl işlendiğini ve çerez kullanımını açıklar.</p>
+<h4>Toplanan Veriler</h4>
+<p>Yalnızca siparişin ve iletişimin gerektirdiği veriler (ad-soyad, iletişim, teslimat adresi) toplanır. Ödeme verileri sitede tutulmaz; iyzico tarafından işlenir.</p>
+<h4>Çerezler</h4>
+<p>Sitemiz, temel işlevlerin (dil tercihi, sepet oturumu) çalışması için <b>zorunlu çerezler</b> kullanır. Pazarlama amaçlı üçüncü taraf takip çerezi kullanılmaz. Tarayıcı ayarlarınızdan çerezleri yönetebilir/silebilirsiniz; ancak zorunlu çerezlerin engellenmesi bazı işlevleri etkileyebilir.</p>
+<h4>Üçüncü Taraf Hizmetler</h4>
+<p>Ödeme (iyzico), barındırma/CDN (Cloudflare) ve kargo hizmetleri için gerekli asgari veriler, yalnızca hizmetin ifası amacıyla ilgili sağlayıcılarla paylaşılır.</p>
+<h4>Veri Güvenliği</h4>
+<p>Site HTTPS ile şifreli sunulur; verileriniz için makul teknik ve idari tedbirler alınır. Ayrıntı için KVKK Aydınlatma Metni'ne bakınız.</p>
+<h4>İletişim</h4>
+<p>Gizlilikle ilgili talepler için: info@mddstudio.com</p>`],
+
+kosullar: ["Kullanım Koşulları", `
+<h4>1. Kabul</h4>
+<p>mddstudio.co'yu kullanarak işbu Kullanım Koşulları'nı kabul etmiş olursunuz. Kabul etmiyorsanız siteyi kullanmayınız.</p>
+<h4>2. Fikri Mülkiyet</h4>
+<p>Sitedeki tüm tasarımlar, illüstrasyonlar, sticker ve kart görselleri, metinler, logo (“MDD Studio”, “مدد”) ve marka öğeleri DİDA Tasarım Ajansı Ltd. Şti.'ye aittir ve fikri/sınai mülkiyet mevzuatı ile korunur. <b>Bu içeriklerin izinsiz kopyalanması, çoğaltılması, dağıtılması, yeniden satışı veya türev üretimde kullanılması kesinlikle yasaktır ve hukuki/cezai takibe konu edilir.</b> Ürünler kişisel kullanım için satılır; ticari çoğaltma hakkı vermez.</p>
+<h4>3. Ürün Bilgileri, Fiyat ve Stok</h4>
+<p>Ürün görselleri ile teslim edilen ürün arasında baskı/ekran kaynaklı küçük renk/ton farkları olabilir. Satıcı; fiyatları, ürün yelpazesini ve kampanyaları önceden haber vermeksizin değiştirme ve açık hata içeren fiyat/stok kayıtlarında siparişi iptal etme hakkını saklı tutar.</p>
+<h4>4. Sorumluluğun Sınırlandırılması</h4>
+<p>Site “olduğu gibi” sunulur. Satıcı, mevzuatın izin verdiği azami ölçüde sitenin kesintisiz/hatasız olacağını taahhüt etmez ve dolaylı zararlardan sorumlu tutulamaz. Tüketici mevzuatından doğan haklarınız saklıdır.</p>
+<h4>5. Uygulanacak Hukuk</h4>
+<p>İşbu koşullara Türkiye Cumhuriyeti hukuku uygulanır. Uyuşmazlıklarda ilgili mevzuattaki yetkili merciler (Tüketici Hakem Heyetleri/Mahkemeleri) yetkilidir.</p>
+<h4>6. Yürürlük ve Değişiklik</h4>
+<p>Satıcı bu koşulları güncelleyebilir; güncel sürüm sitede yayımlandığı anda yürürlüğe girer.</p>`]
 };
+
 function openLegal(key){
   document.getElementById("legal-title").textContent = LEGAL[key][0];
   document.getElementById("legal-body").innerHTML = LEGAL[key][1] +
