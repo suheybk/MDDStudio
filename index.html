@@ -147,6 +147,9 @@
   .thumb{aspect-ratio:1;display:flex;align-items:center;justify-content:center;
     background:var(--ink-2)}
   .thumb .ar{font-size:96px;color:rgba(243,241,236,.92);line-height:1;transform:translateY(-6px)}
+  .thumb.thumb-img{background:#fbfaf5;padding:0}
+  .thumb.thumb-img img{width:100%;height:100%;object-fit:contain;display:block}
+  .ci-thumb img{width:100%;height:100%;object-fit:cover;display:block}
   .card-body{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1}
   .card-body h3{font-size:14px;font-weight:500;line-height:1.4}
   .price{font-size:15px;font-weight:600}
@@ -491,10 +494,11 @@ function setLang(l){
    PRODUCTS — örnek katalog; gerçek liste (fotoğraf/fiyat/stok) eklenecek
 ================================================================ */
 const PRODUCTS = [
-  {id:"m1", cat:"midad",  name:"Bismillah Sticker Seti (12'li)",   price:149, g:"م"},
-  {id:"m2", cat:"midad",  name:"Gizemli Boyama — Kudüs Silüeti",   price:89,  g:"م"},
-  {id:"m3", cat:"midad",  name:"Hat Koleksiyonu Laptop Sticker",   price:99,  g:"م"},
-  {id:"m4", cat:"midad",  name:"Ayet Poster — A3 Mat Baskı",       price:129, g:"م"},
+  {id:"m1", cat:"midad", name:"Ödül Sticker Seti — Aferin · Maşallah · Tebrikler (Kız)", price:99,  g:"م", img:"products/odul-kiz.jpg"},
+  {id:"m2", cat:"midad", name:"Kuran Okuyorum Sticker Seti (Erkek Çocuk)",               price:89,  g:"م", img:"products/kuran-okuyorum.jpg"},
+  {id:"m3", cat:"midad", name:"Journaling Sticker Sayfası — Today, Choose Peace (A5)",   price:129, g:"م", img:"products/today-choose-peace.jpg"},
+  {id:"m4", cat:"midad", name:"Summer Vibes Sticker Seti — Sarı & Mavi",                 price:79,  g:"م", img:"products/summer-sari-mavi.jpg"},
+  {id:"m5", cat:"midad", name:"Summer Vibes Sticker Seti — Mint & Yeşil",                price:79,  g:"م", img:"products/summer-mint-yesil.jpg"},
   {id:"u1", cat:"muddet", name:"Namaz Takip Defteri",              price:179, g:"د"},
   {id:"u2", cat:"muddet", name:"90 Günlük Hatim Planlayıcısı",     price:199, g:"د"},
   {id:"u3", cat:"muddet", name:"Rûznâme — Bullet Journal",         price:249, g:"د"},
@@ -513,7 +517,7 @@ function renderGrids(){
       const card = document.createElement("div");
       card.className = "card";
       card.innerHTML = `
-        <div class="thumb"><span class="ar">${p.g}</span></div>
+        <div class="thumb${p.img?' thumb-img':''}">${p.img?`<img src="${p.img}" alt="${p.name}" loading="lazy">`:`<span class="ar">${p.g}</span>`}</div>
         <div class="card-body">
           <h3>${p.name}</h3>
           <div class="price">${p.price} ₺</div>
@@ -559,7 +563,7 @@ function renderCart(){
     const row = document.createElement("div");
     row.className = "ci";
     row.innerHTML = `
-      <div class="ci-thumb"><span class="ar">${p.g}</span></div>
+      <div class="ci-thumb">${p.img?`<img src="${p.img}" alt="">`:`<span class="ar">${p.g}</span>`}</div>
       <div class="ci-info">${p.name}<br><b>${p.price*qty} ₺</b></div>
       <div class="ci-qty">
         <button onclick="setQty('${id}',${qty-1})">−</button>
