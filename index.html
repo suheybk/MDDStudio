@@ -134,7 +134,9 @@
   .sc-arrow{display:block;font-size:15px;margin-top:5px;animation:cuebob 1.8s ease-in-out infinite}
   @keyframes cuebob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
   .home-featured{max-width:1100px;margin:0 auto;padding:44px 28px 84px}
-  .hf-head{text-align:center;margin-bottom:34px}
+  .hf-block{margin-top:60px}
+  .hf-block:first-child{margin-top:0}
+  .hf-head{text-align:center;margin-bottom:30px}
   .hf-head .glyph{font-family:'Amiri',serif;font-size:46px;color:var(--ink);line-height:1;display:block}
   .hf-head h2{font-size:22px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-top:8px}
   .hf-head p{max-width:560px;margin:12px auto 0;color:var(--muted);font-size:14px;line-height:1.75}
@@ -304,12 +306,27 @@
   </div>
 
   <section class="home-featured" id="home-featured">
-    <div class="hf-head">
-      <span class="glyph ar">م</span>
-      <h2 class="t" data-i18n="hf_title"></h2>
-      <p class="t" data-i18n="hf_sub"></p>
+    <div class="hf-block">
+      <div class="hf-head">
+        <span class="glyph ar">م</span>
+        <h2 class="t" data-i18n="hf_best"></h2>
+        <p class="t" data-i18n="hf_best_sub"></p>
+      </div>
+      <div class="grid" data-ids="m1,m3,m2,e2"></div>
     </div>
-    <div class="grid" data-cat="midad"></div>
+    <div class="hf-block">
+      <div class="hf-head">
+        <h2 class="t" data-i18n="hf_title"></h2>
+        <p class="t" data-i18n="hf_sub"></p>
+      </div>
+      <div class="grid" data-cat="midad"></div>
+    </div>
+    <div class="hf-block">
+      <div class="hf-head">
+        <h2 class="t" data-i18n="hf_cards"></h2>
+      </div>
+      <div class="grid" data-cat="meded"></div>
+    </div>
     <div class="hf-cta">
       <button class="t" data-i18n="hf_all" onclick="go('midad')"></button>
     </div>
@@ -462,7 +479,7 @@ tr: {
   dir:"ltr",
   nav_about:"Hakkımızda", nav_contact:"İletişim", nav_cart:"Sepet",
   hint:"harflere tıkla · sürükleyerek döndür",
-  hf_title:"Öne Çıkan Stickerlar", hf_sub:"Ankara atölyemizde tasarlayıp bastığımız çıkartma sayfaları — her biri hem göze hem gönle.", hf_all:"Tüm Stickerları Gör →", hf_cue:"stickerlar",
+  hf_best:"Çok Satanlar", hf_best_sub:"En sevilenler — hızlıca göz at.", hf_title:"Öne Çıkan Stickerlar", hf_sub:"Ankara atölyemizde tasarlayıp bastığımız çıkartma sayfaları — her biri hem göze hem gönle.", hf_cards:"Dua & Ayet Kartları", hf_all:"Tüm Stickerları Gör →", hf_cue:"stickerlar",
   verse:`<b>18:109</b> — De ki: "Eğer Rabbimin sözlerini yazmak için deniz mürekkep olsaydı, kesinlikle Rabbimin sözleri tükenmeden deniz tükenirdi, bir misli de yardımcı getirsek bile."`,
   midad_title:"Midad — Baskı & Sticker",
   midad_desc:"Mürekkep, akışın hâlidir. Sticker setleri, gizemli boyamalar, posterler ve kağıda dökülen her şey bu dalın altında toplanır.",
@@ -495,7 +512,7 @@ en: {
   dir:"ltr",
   nav_about:"About", nav_contact:"Contact", nav_cart:"Cart",
   hint:"click the letters · drag to rotate",
-  hf_title:"Featured Stickers", hf_sub:"Sticker sheets designed and printed in our Ankara workshop — for the eye and the heart.", hf_all:"See All Stickers →", hf_cue:"stickers",
+  hf_best:"Best Sellers", hf_best_sub:"Most loved — take a quick look.", hf_title:"Featured Stickers", hf_sub:"Sticker sheets designed and printed in our Ankara workshop — for the eye and the heart.", hf_cards:"Dua & Verse Cards", hf_all:"See All Stickers →", hf_cue:"stickers",
   verse:`<b>18:109</b> — Say: "If the sea were ink for the words of my Lord, the sea would surely be exhausted before the words of my Lord were exhausted, even if We brought the like of it in aid."`,
   midad_title:"Midad — Print & Stickers",
   midad_desc:"Midad is ink — the state of flow. Sticker sets, mystery colouring pages, posters, and everything poured onto paper gathers under this branch.",
@@ -528,7 +545,7 @@ ar: {
   dir:"rtl",
   nav_about:"من نحن", nav_contact:"التواصل", nav_cart:"السلة",
   hint:"انقر على الحروف · اسحب للتدوير",
-  hf_title:"ملصقات مختارة", hf_sub:"صفحات ملصقات نصممها ونطبعها في ورشتنا بأنقرة — للعين وللقلب.", hf_all:"عرض كل الملصقات ←", hf_cue:"ملصقات",
+  hf_best:"الأكثر مبيعًا", hf_best_sub:"الأكثر حبًا — نظرة سريعة.", hf_title:"ملصقات مختارة", hf_sub:"صفحات ملصقات نصممها ونطبعها في ورشتنا بأنقرة — للعين وللقلب.", hf_cards:"بطاقات الدعاء والآيات", hf_all:"عرض كل الملصقات ←", hf_cue:"ملصقات",
   verse:`<b>١٨:١٠٩</b> — قُل لَّوْ كَانَ الْبَحْرُ مِدَادًا لِّكَلِمَاتِ رَبِّي لَنَفِدَ الْبَحْرُ قَبْلَ أَن تَنفَدَ كَلِمَاتُ رَبِّي وَلَوْ جِئْنَا بِمِثْلِهِ مَدَدًا`,
   midad_title:"مداد — طباعة وملصقات",
   midad_desc:"المداد هو الحبر، حالة الانسياب. مجموعات الملصقات وصفحات التلوين والملصقات الجدارية وكل ما يُسكب على الورق يجتمع تحت هذا الفرع.",
@@ -598,9 +615,11 @@ const PRODUCTS = [
 
 function renderGrids(){
   document.querySelectorAll(".grid").forEach(grid => {
-    const cat = grid.dataset.cat;
     grid.innerHTML = "";
-    PRODUCTS.filter(p => p.cat === cat).forEach(p => {
+    const list = grid.dataset.ids
+      ? grid.dataset.ids.split(",").map(s => PRODUCTS.find(p => p.id === s.trim())).filter(Boolean)
+      : PRODUCTS.filter(p => p.cat === grid.dataset.cat);
+    list.forEach(p => {
       const card = document.createElement("div");
       card.className = "card";
       card.innerHTML = `
@@ -933,24 +952,22 @@ buildLetter(dalGeo, -0.51, 'muddet', 'tick',  'muddet');
 buildLetter(dalGeo, -2.84, 'meded',  'reach', 'meded');
 
 logo.position.y = -0.35;
-let logoTargetY = -0.35;
 logo.rotation.set(0.06, -0.32, 0);
 document.getElementById('loading').classList.add('done');
 
-/* açılış koreografisi: harfleri yukarı süz + sattığımız stickerları ekrana getir */
+/* açılış koreografisi: harfler ekran ortasında kalır; sayfayı nazikçe indirip ürünleri getir */
 let userScrolled = false;
 addEventListener('wheel',    ()=>userScrolled=true, {passive:true, once:true});
 addEventListener('touchmove',()=>userScrolled=true, {passive:true, once:true});
 (function homeIntro(){
-  if (reduceMotion){ logo.position.y = 1.2; logoTargetY = 1.2; return; }
-  setTimeout(()=>{ logoTargetY = 1.4; }, 750);                               // harfler yukarı süzülür
-  setTimeout(()=>{ const c=document.getElementById('scroll-cue'); if(c) c.classList.add('show'); }, 1650);
-  setTimeout(()=>{                                                           // sayfa nazikçe iner
+  if (reduceMotion) return;
+  setTimeout(()=>{ const c=document.getElementById('scroll-cue'); if(c) c.classList.add('show'); }, 1400);
+  setTimeout(()=>{                                                           // sayfa nazikçe iner, ürünler görünür
     if(!userScrolled && !document.body.classList.contains('on-page')){
       const hf=document.getElementById('home-featured');
-      if(hf) scrollTo({top:Math.max(0, hf.offsetTop - innerHeight*0.30), behavior:'smooth'});
+      if(hf) scrollTo({top:Math.max(0, hf.offsetTop - innerHeight*0.28), behavior:'smooth'});
     }
-  }, 2500);
+  }, 2200);
 })();
 
 /* ---------- drag + click-to-navigate ---------- */
@@ -1014,7 +1031,6 @@ function animate(){
   }
   logo.rotation.y += (targetRY-logo.rotation.y)*0.08;
   logo.rotation.x += (targetRX-logo.rotation.x)*0.08;
-  logo.position.y += (logoTargetY-logo.position.y)*0.045;
 
   raycaster.setFromCamera(pointer, camera);
   const hits = raycaster.intersectObjects(letters.map(l=>l.mesh));
