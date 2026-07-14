@@ -6,3 +6,10 @@ Thumbs.db
 
 # internal notes (not for the public site repo)
 YAYIN-KONTROL-LISTESI.md
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
