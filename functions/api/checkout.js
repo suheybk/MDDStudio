@@ -1,24 +1,10 @@
+import { CATALOG, sealOrder } from "../_order.js";
+
 // POST /api/checkout  — iyzico CheckoutForm başlatma (sunucu tarafı, anahtarlar env'den)
 // Anahtarlar Cloudflare Pages > Settings > Environment variables içinde ŞİFRELİ tutulur:
 //   IYZICO_API_KEY, IYZICO_SECRET_KEY  (opsiyonel: IYZICO_BASE_URL prod için)
 
-// Sunucu tarafı fiyat kaynağı — istemciden gelen fiyata GÜVENİLMEZ, id+adet ile buradan hesaplanır.
-const CATALOG = {
-  m1:{n:"Ödül Sticker Seti — Aferin/Maşallah/Tebrikler (Kız)", p:99},
-  m2:{n:"Kuran Okuyorum Sticker Seti (Erkek)",                 p:89},
-  m3:{n:"Journaling Sticker Sayfası — Today, Choose Peace",    p:129},
-  m4:{n:"Summer Vibes — Sarı & Mavi",                          p:79},
-  m5:{n:"Summer Vibes — Mint & Yeşil",                         p:79},
-  m6:{n:"Hanımlar — Modest Lifestyle Sticker",                p:99},
-  m7:{n:"Bloom Softly — Çiçek Sticker (A5)",                  p:89},
-  m8:{n:"Küçük Müslüman — Kız Çocuk Sticker",                 p:89},
-  u1:{n:"Namaz Takip Defteri",                                p:179},
-  u2:{n:"90 Günlük Hatim Planlayıcısı",                        p:199},
-  u3:{n:"Rûznâme — Bullet Journal",                           p:249},
-  u4:{n:"İbadet Alışkanlık Çizelgesi",                         p:149},
-  e1:{n:"Dua Kartı — It's Just Dunya",                        p:49},
-  e2:{n:"Ayet Kartı — Duha Suresi (93:1-2)",                  p:59},
-};
+// Sunucu tarafı fiyat kaynağı — istemciden gelen fiyata GÜVENİLMEZ, id+adet ile ../_order.js içindeki CATALOG'dan hesaplanır.
 
 export async function onRequestPost({ request, env }) {
   const apiKey = env.IYZICO_API_KEY, secretKey = env.IYZICO_SECRET_KEY;
@@ -31,6 +17,7 @@ export async function onRequestPost({ request, env }) {
   const b = payload.buyer || {};
 
   const basketItems = [];
+  const orderLines = [];
   let total = 0;
   for (const it of rawItems) {
     const prod = CATALOG[it && it.id];
@@ -38,6 +25,7 @@ export async function onRequestPost({ request, env }) {
     if (!prod) continue;
     const line = prod.p * qty;
     total += line;
+    orderLines.push([String(it.id), qty]);
     basketItems.push({
       id: String(it.id),
       name: qty > 1 ? `${prod.n} x${qty}` : prod.n,
@@ -61,6 +49,9 @@ export async function onRequestPost({ request, env }) {
   const now = Date.now();
   const addr = { contactName: `${name} ${surname}`.trim(), city, country: "Turkey", address };
 
+  // Sipariş maili için müşteri bilgisi şifrelenip dönüş adresine eklenir (bkz. callback.js)
+  const sealed = await sealOrder(secretKey, { b: { n: name, s: surname, e: email, p: phone, a: address, c: city }, i: orderLines });
+
   const reqBody = {
     locale: "tr",
     conversationId: "mdd-" + now,
@@ -69,7 +60,7 @@ export async function onRequestPost({ request, env }) {
     currency: "TRY",
     basketId: "B" + now,
     paymentGroup: "PRODUCT",
-    callbackUrl: origin + "/api/callback",
+    callbackUrl: origin + "/api/callback?o=" + sealed,
     enabledInstallments: [1, 2, 3, 6, 9],
     buyer: {
       id: "BY" + now, name, surname, gsmNumber: phone, email,
