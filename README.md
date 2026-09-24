@@ -3,12 +3,14 @@
 مدد · **Midad** (mürekkep) · **Müddet** (süre) · **Meded** (yardım)
 
 Estetik ile imanı buluşturan İslami tasarım markası MDD Studio'nun web sitesi.
-Tek dosyalık statik site (TR/EN/AR, three.js 3D hero, sepet, iyzico entegrasyonu planlı).
+Tek dosyalık statik mağaza (kawaii tasarım, kategori şeridi, büyüteçli ürün galerisi, sepet, iyzico CheckoutForm).
 DİDA Tasarım Ajansı Ltd. Şti.
 
 ## Yapı
 - `index.html` — sitenin kendisi (hosting varsayılan olarak bunu sunar)
-- `mdd-studio-site.html` — aynı içeriğin kaynak/yedek kopyası
+- `brand/` — logo dosyaları (SVG)
+- `products/sahne/` — ürünlerin masa ve defter sahneleri (`*-masa.jpg`, `*-defter.jpg`); `products/*.jpg` tasarımın kendisi
+- `functions/api/` — iyzico ödeme başlatma ve dönüş (Pages Functions). Ürün id ve fiyatları `checkout.js` içindeki `CATALOG` ile `index.html` içindeki `P` listesinde aynı olmalı.
 - `robots.txt`, `sitemap.xml` — SEO
 
 ## Cloudflare Pages ile yayınlama
