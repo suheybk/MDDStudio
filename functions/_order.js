@@ -1,3 +1,5 @@
+import { sendMail } from "./_mail.js";
+
 // Ortak yardımcılar: sipariş bilgisini şifreleyip iyzico dönüşüne taşımak ve sipariş maili göndermek.
 // "_" ile başladığı için Pages bu dosyayı bir adres (route) olarak yayınlamaz.
 
@@ -94,17 +96,5 @@ ${lines.map(l => `<tr><td style="padding:6px 0;border-bottom:1px solid #F1DCE6">
 <tr><td colspan="2" style="padding:8px 0"><b>Toplam</b></td><td style="text-align:right"><b>${esc(amount)} ₺</b></td></tr>
 </table></div>`;
 
-  const msg = { to, from, subject, text, html };
-  if (env.EMAIL && typeof env.EMAIL.send === "function") {
-    await env.EMAIL.send(msg);
-    return true;
-  }
-  if (!env.CF_EMAIL_TOKEN) return false;
-  const account = env.CF_ACCOUNT_ID || "07a66e46f94888850bd39f0f732d9556";
-  const r = await fetch(`https://api.cloudflare.com/client/v4/accounts/${account}/email/sending/send`, {
-    method: "POST",
-    headers: { "Authorization": `Bearer ${env.CF_EMAIL_TOKEN}`, "Content-Type": "application/json" },
-    body: JSON.stringify(msg),
-  });
-  return r.ok;
+  return sendMail(env, { to, from, subject, text, html });
 }
