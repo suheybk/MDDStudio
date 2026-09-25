@@ -13,6 +13,28 @@ export async function onRequestPost({ request, env }) {
 
   let payload;
   try { payload = await request.json(); } catch { return json({ error: "Geçersiz istek." }, 400); }
+
+  // ---- IP kontrolü ----
+  const ip = request.headers.get("cf-connecting-ip");
+  if (!ip) return json({ error: "İstek doğrulanamadı." }, 400);
+  const country = (request.cf && request.cf.country) || "";
+  if (country === "T1") return json({ error: "Bu ağ üzerinden ödeme yapılamıyor." }, 403); // Tor çıkış düğümü
+  const allowed = (env.ALLOWED_COUNTRIES || "").split(",").map(x => x.trim().toUpperCase()).filter(Boolean);
+  if (allowed.length && !allowed.includes(country)) return json({ error: "Bu ülkeden ödeme kabul edilmiyor." }, 403);
+  const blocked = (env.BLOCKED_IPS || "").split(",").map(x => x.trim()).filter(Boolean);
+  if (blocked.includes(ip)) return json({ error: "İstek reddedildi." }, 403);
+
+  // ---- CAPTCHA (Cloudflare Turnstile) ----
+  // TURNSTILE_SECRET tanımlıysa zorunludur; tanımlı değilse (kurulum tamamlanana kadar) atlanır.
+  if (env.TURNSTILE_SECRET) {
+    const fd = new FormData();
+    fd.append("secret", env.TURNSTILE_SECRET);
+    fd.append("response", String(payload.cfToken || ""));
+    fd.append("remoteip", ip);
+    let ts = null;
+    try { ts = await (await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body: fd })).json(); } catch {}
+    if (!ts || !ts.success) return json({ error: "Güvenlik doğrulaması başarısız. Lütfen doğrulamayı tamamlayıp tekrar deneyin." }, 403);
+  }
   const rawItems = Array.isArray(payload.items) ? payload.items : [];
   const b = payload.buyer || {};
 
@@ -38,7 +60,6 @@ export async function onRequestPost({ request, env }) {
   const priceStr = total.toFixed(2);
 
   const origin = new URL(request.url).origin;
-  const ip = request.headers.get("cf-connecting-ip") || "85.34.78.112";
   const clip = (v, n, d) => (v == null ? d : String(v)).slice(0, n);
   const name = clip(b.name, 50, "Misafir");
   const surname = clip(b.surname, 50, "Müşteri");
