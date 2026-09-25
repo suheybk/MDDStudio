@@ -1,8 +1,8 @@
-import { sendMail } from "./_mail.js";
-
-// Ortak yardımcılar: sipariş bilgisini şifreleyip iyzico dönüşüne taşımak ve sipariş maili göndermek.
+// Sipariş yardımcıları: sunucu tarafı ürün kataloğu ve sipariş mailleri.
 // "_" ile başladığı için Pages bu dosyayı bir adres (route) olarak yayınlamaz.
+import { sendMail, brandedHtml } from "./_mail.js";
 
+// Fiyatların tek kaynağı: istemciden gelen fiyata güvenilmez. id'ler index.html'deki P listesiyle aynı olmalı.
 export const CATALOG = {
   m1:{n:"Ödül Sticker Seti — Aferin/Maşallah/Tebrikler (Kız)", p:99},
   m2:{n:"Kuran Okuyorum Sticker Seti (Erkek)",                 p:89},
@@ -20,81 +20,49 @@ export const CATALOG = {
   e2:{n:"Ayet Kartı — Duha Suresi (93:1-2)",                  p:59},
 };
 
-const enc = new TextEncoder(), dec = new TextDecoder();
-const b64u = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-const unb64u = s => Uint8Array.from(atob(s.replace(/-/g, "+").replace(/_/g, "/")), c => c.charCodeAt(0));
-
-async function aesKey(secret) {
-  const raw = await crypto.subtle.digest("SHA-256", enc.encode(secret + "|mdd-order"));
-  return crypto.subtle.importKey("raw", raw, "AES-GCM", false, ["encrypt", "decrypt"]);
-}
-
-// Müşteri bilgisi URL'de açık metin olarak durmasın diye AES-GCM ile şifrelenir.
-export async function sealOrder(secret, data) {
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, await aesKey(secret), enc.encode(JSON.stringify(data)));
-  const out = new Uint8Array(12 + ct.byteLength);
-  out.set(iv); out.set(new Uint8Array(ct), 12);
-  return b64u(out);
-}
-
-export async function openOrder(secret, token) {
-  try {
-    const bytes = unb64u(token);
-    const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: bytes.slice(0, 12) }, await aesKey(secret), bytes.slice(12));
-    return JSON.parse(dec.decode(pt));
-  } catch { return null; }
-}
-
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-// Sipariş maili. Önce Pages'e bağlanmış EMAIL (send_email) bağlantısını, yoksa Email Service REST API'sini kullanır.
-// Gerekli ayar (Cloudflare Pages > mdd-studio > Settings > Variables and secrets):
-//   CF_EMAIL_TOKEN  : "Email Sending" izni olan API token (secret)
-//   CF_ACCOUNT_ID   : (opsiyonel) varsayılan aşağıda
-//   ORDER_EMAIL_TO  : (opsiyonel) varsayılan info@mddstudio.co
-//   ORDER_EMAIL_FROM: (opsiyonel) varsayılan siparis@mddstudio.co
-export async function sendOrderMail(env, { payment, order, live, unverified = false, token = "" }) {
+// Sepeti katalogla doğrular: [{id, qty}] → satırlar ve toplam
+export function priceCart(items) {
+  const lines = [];
+  for (const it of Array.isArray(items) ? items : []) {
+    const prod = CATALOG[it && it.id];
+    const q = Math.max(1, Math.min(99, parseInt(it && it.qty) || 0));
+    if (prod) lines.push({ id: String(it.id), n: prod.n, q, p: prod.p * q });
+  }
+  return { lines, total: lines.reduce((a, l) => a + l.p, 0) };
+}
+
+// Mağazaya giden "SİPARİŞ TALEBİ" maili ve müşteriye giden onay maili
+export async function sendOrderRequestMails(env, { orderNo, buyer: b, lines, total }) {
   const to = env.ORDER_EMAIL_TO || "info@mddstudio.co";
-  const from = env.ORDER_EMAIL_FROM || "siparis@mddstudio.co";
-  const b = (order && order.b) || {};
-  const lines = (order && order.i ? order.i : (payment.itemTransactions || []).map(t => [t.itemId, 1]))
-    .map(([id, q]) => ({ id, q, n: (CATALOG[id] || {}).n || id, p: ((CATALOG[id] || {}).p || 0) * q }));
-  const who = [b.n, b.s].filter(Boolean).join(" ") || "Müşteri";
-  const amount = payment.paidPrice || lines.reduce((a, l) => a + l.p, 0);
-  const subject = unverified
-    ? `${live ? "" : "[TEST] "}SİPARİŞ – KONTROL EDİN · ${who} · ${amount} ₺ · ödeme doğrulanamadı`
-    : `${live ? "" : "[TEST] "}SİPARİŞ · ${who} · ${amount} ₺ · #${payment.paymentId || ""}`;
-  const warn = unverified
-    ? `Müşteri ödeme sayfasından döndü ama ödeme sonucu ödeme sağlayıcısından sorgulanamadı. Ödemenin alınıp alınmadığını sağlayıcının panelinden kontrol edin (token: ${token || "-"}). Ödeme alındıysa siparişi hazırlayın.`
-    : "";
+  const who = `${b.name} ${b.surname}`.trim();
   const when = new Date().toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" });
+  const rows = lines.map(l => `<tr><td style="padding:6px 0;border-bottom:1px solid #F1DCE6">${esc(l.n)}</td><td style="text-align:center;border-bottom:1px solid #F1DCE6">× ${l.q}</td><td style="text-align:right;border-bottom:1px solid #F1DCE6">${l.p} ₺</td></tr>`).join("");
+  const table = `<table style="border-collapse:collapse;width:100%;font-size:14px">${rows}<tr><td colspan="2" style="padding:8px 0"><b>Toplam</b></td><td style="text-align:right"><b>${total} ₺</b></td></tr></table>`;
 
-  const text = [
-    `YENİ SİPARİŞ${live ? "" : " (test modu)"}${unverified ? " – ÖDEME DOĞRULANAMADI" : ""}`,
-    ...(warn ? [warn, ""] : []),
-    `Sipariş no: ${payment.paymentId || "-"}   Tarih: ${when}`,
-    `Tutar: ${amount} ₺`, "",
-    "Müşteri", `${who}`, `E-posta: ${b.e || "-"}`, `Telefon: ${b.p || "-"}`, "",
-    "Teslimat adresi", `${b.a || "-"}`, `${b.c || ""}`, "",
-    "Ürünler", ...lines.map(l => `- ${l.n} × ${l.q} = ${l.p} ₺`),
-  ].join("\n");
-
-  const html = `<div style="font-family:Arial,sans-serif;color:#1F2A56;max-width:560px">
-<h2 style="margin:0 0 4px">Yeni sipariş${unverified ? " – kontrol edin" : ""}${live ? "" : " <span style='color:#C2789E'>(test modu)</span>"}</h2>
-${warn ? `<p style="margin:0 0 14px;padding:10px 12px;background:#FFF1C9;border-radius:8px"><b>Ödeme doğrulanamadı.</b> ${esc(warn)}</p>` : ""}
-<p style="margin:0 0 16px;color:#6B6F8E">Sipariş no <b>${esc(payment.paymentId || "-")}</b> · ${esc(when)}</p>
+  await sendMail(env, {
+    to, from: env.ORDER_EMAIL_FROM || "siparis@mddstudio.co",
+    subject: `SİPARİŞ TALEBİ · ${who} · ${total} ₺ · #${orderNo}`,
+    text: [`YENİ SİPARİŞ TALEBİ (ödeme henüz alınmadı)`, `Sipariş no: ${orderNo}   Tarih: ${when}`, `Tutar: ${total} ₺`, "",
+      "Müşteri", who, `E-posta: ${b.email}`, `Telefon: ${b.phone}`, "", "Teslimat adresi", b.address, b.city, "",
+      "Ürünler", ...lines.map(l => `- ${l.n} × ${l.q} = ${l.p} ₺`), "", "Müşteriye ödeme bilgisini iletmeyi unutmayın."].join("\n"),
+    html: `<div style="font-family:Arial,sans-serif;color:#1F2A56;max-width:560px">
+<h2 style="margin:0 0 4px">Yeni sipariş talebi</h2>
+<p style="margin:0 0 14px;padding:10px 12px;background:#FFF1C9;border-radius:8px">Ödeme henüz alınmadı. Müşteriye ödeme bilgisini iletin.</p>
+<p style="margin:0 0 16px;color:#6B6F8E">Sipariş no <b>${esc(orderNo)}</b> · ${esc(when)}</p>
 <table style="border-collapse:collapse;width:100%;font-size:14px">
 <tr><td style="padding:6px 0;color:#6B6F8E;width:120px">Müşteri</td><td><b>${esc(who)}</b></td></tr>
-<tr><td style="padding:6px 0;color:#6B6F8E">E-posta</td><td>${esc(b.e || "-")}</td></tr>
-<tr><td style="padding:6px 0;color:#6B6F8E">Telefon</td><td>${esc(b.p || "-")}</td></tr>
-<tr><td style="padding:6px 0;color:#6B6F8E;vertical-align:top">Adres</td><td>${esc(b.a || "-")}<br>${esc(b.c || "")}</td></tr>
-</table>
-<h3 style="margin:18px 0 6px">Ürünler</h3>
-<table style="border-collapse:collapse;width:100%;font-size:14px">
-${lines.map(l => `<tr><td style="padding:6px 0;border-bottom:1px solid #F1DCE6">${esc(l.n)}</td><td style="text-align:center;border-bottom:1px solid #F1DCE6">× ${l.q}</td><td style="text-align:right;border-bottom:1px solid #F1DCE6">${l.p} ₺</td></tr>`).join("")}
-<tr><td colspan="2" style="padding:8px 0"><b>Toplam</b></td><td style="text-align:right"><b>${esc(amount)} ₺</b></td></tr>
-</table></div>`;
+<tr><td style="padding:6px 0;color:#6B6F8E">E-posta</td><td>${esc(b.email)}</td></tr>
+<tr><td style="padding:6px 0;color:#6B6F8E">Telefon</td><td>${esc(b.phone)}</td></tr>
+<tr><td style="padding:6px 0;color:#6B6F8E;vertical-align:top">Adres</td><td>${esc(b.address)}<br>${esc(b.city)}</td></tr>
+</table><h3 style="margin:18px 0 6px">Ürünler</h3>${table}</div>`,
+  }).catch(e => console.log("shop order mail failed", e && e.message));
 
-  return sendMail(env, { to, from, subject, text, html });
+  await sendMail(env, {
+    to: b.email, subject: `MDD Studio siparişiniz alındı · #${orderNo}`,
+    text: `Merhaba ${b.name},\n\nSiparişiniz bize ulaştı (no: ${orderNo}, tutar: ${total} ₺). Ödeme bilgilerini en kısa sürede bu adrese ileteceğiz; ödemeniz alındıktan sonra siparişiniz hazırlanıp kargoya verilecek.\n\n` +
+      lines.map(l => `- ${l.n} × ${l.q} = ${l.p} ₺`).join("\n") + `\n\nSorunuz için: info@mddstudio.co · 0533 486 28 99`,
+    html: brandedHtml("Siparişiniz alındı, teşekkürler!", `<p>Merhaba ${esc(b.name)},</p><p>Siparişiniz bize ulaştı. <b>Sipariş no: ${esc(orderNo)}</b></p>${table}<p style="margin-top:14px">Ödeme bilgilerini en kısa sürede bu adrese ileteceğiz; ödemeniz alındıktan sonra siparişiniz hazırlanıp kargoya verilecek.</p><p style="font-size:13px;color:#6B6F8E">Teslimat: ${esc(b.address)}, ${esc(b.city)}</p>`),
+  }).catch(e => console.log("customer order mail failed", e && e.message));
 }

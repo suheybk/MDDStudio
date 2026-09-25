@@ -251,7 +251,7 @@ footer{margin-top:40px;margin-inline:-16px;padding:32px 16px calc(26px + env(saf
       <img src="/products/sahne/today-choose-peace-defter.jpg" alt="">
     </div>
   </section>
-  <div class="perks"><div>iyzico ile güvenli ödeme</div><div>3D Secure</div><div>14 gün cayma hakkı</div><div>Evimizde tasarlanır ve basılır</div></div>
+  <div class="perks"><div>Güvenli alışveriş</div><div>14 gün cayma hakkı</div><div>Evimizde tasarlanır ve basılır</div></div>
 
   <div id="rows"></div>
   <section class="row" id="results" hidden><div class="rh"><h2><i></i><span id="resTitle">Sonuçlar</span></h2><button class="all" type="button" id="clearF">Filtreyi temizle ✕</button></div><div class="grid" id="resGrid"></div></section>
@@ -294,8 +294,8 @@ footer{margin-top:40px;margin-inline:-16px;padding:32px 16px calc(26px + env(saf
   <div class="items" id="items"></div>
   <div class="tot"><span>Toplam</span><span id="total">0 ₺</span></div>
   <p class="shipnote">Fiyatlara KDV dâhildir.</p>
-  <button class="btn pay" type="button" id="goCheckout">Ödemeye geç</button>
-  <p class="note">Ödemeler iyzico güvenli ödeme altyapısı üzerinden alınır. Kart bilgileriniz sitemizde saklanmaz.</p>
+  <button class="btn pay" type="button" id="goCheckout">Siparişi tamamla</button>
+  <p class="note">Siparişinizi aldıktan sonra ödeme bilgilerini e-postayla iletiyoruz. Kartla çevrimiçi ödeme çok yakında.</p>
 </aside>
 
 <div class="gal" id="gal" hidden role="dialog" aria-modal="true" aria-label="Ürün görselleri">
@@ -318,9 +318,11 @@ footer{margin-top:40px;margin-inline:-16px;padding:32px 16px calc(26px + env(saf
   <div class="mbox"><h3 id="legal-title"></h3><div id="legal-body"></div><button class="btn" type="button" data-close="legal-modal" style="margin-top:16px">Kapat</button></div>
 </div>
 
-<div class="modal" id="checkout-modal" hidden role="dialog" aria-modal="true" aria-label="Teslimat ve ödeme">
+<div class="modal" id="checkout-modal" hidden role="dialog" aria-modal="true" aria-label="Teslimat bilgileri">
   <div class="mbox">
-    <h3>Teslimat &amp; Ödeme</h3>
+    <div id="co-done" hidden></div>
+    <div id="co-main">
+    <h3>Teslimat bilgileri</h3>
     <form id="checkout-form" autocomplete="on">
       <div class="co-row">
         <input id="co-name" name="name" placeholder="Ad" required autocomplete="given-name">
@@ -330,13 +332,14 @@ footer{margin-top:40px;margin-inline:-16px;padding:32px 16px calc(26px + env(saf
       <input id="co-phone" name="phone" type="tel" placeholder="Telefon (+90…)" required autocomplete="tel">
       <input id="co-address" name="address" placeholder="Adres" required autocomplete="street-address">
       <input id="co-city" name="city" placeholder="Şehir" required autocomplete="address-level1">
-      <p class="consent">Ödemeye geçerek <button type="button" data-legal="onbilgi">Ön Bilgilendirme Formu</button>'nu ve <button type="button" data-legal="mesafeli">Mesafeli Satış Sözleşmesi</button>'ni okuduğunuzu kabul edersiniz.</p>
+      <p class="consent">Siparişi göndererek <button type="button" data-legal="onbilgi">Ön Bilgilendirme Formu</button>'nu ve <button type="button" data-legal="mesafeli">Mesafeli Satış Sözleşmesi</button>'ni okuduğunuzu kabul edersiniz.</p>
       <div id="ts-box" style="min-height:0"></div>
       <div id="checkout-error" class="co-err"></div>
-      <button type="submit" id="pay-btn" class="btn pay">iyzico ile öde</button>
+      <button type="submit" id="pay-btn" class="btn pay">Siparişi gönder</button>
     </form>
-    <p class="note">Ödeme iyzico güvenli sayfasında alınır; kart bilgileriniz sitemizde saklanmaz. 3D Secure destekli.</p>
+    <p class="note">Siparişiniz bize ulaştığında size bir onay e-postası gönderiyoruz; ödeme bilgilerini de aynı adrese iletiyoruz.</p>
     <button class="btn" type="button" data-close="checkout-modal" style="background:var(--blush);color:var(--ink);box-shadow:none;margin-top:8px">Vazgeç</button>
+    </div>
   </div>
 </div>
 <div class="modal" id="account-modal" hidden role="dialog" aria-modal="true" aria-label="Hesabım">
@@ -355,7 +358,7 @@ onbilgi: ["Ön Bilgilendirme Formu", `
 <h4>2. Ürünün Temel Nitelikleri ve Fiyatı</h4>
 <p>Sipariş konusu ürün(ler)in türü, adedi ve satış bedeli sipariş özetinde yer aldığı gibidir. Tüm fiyatlara KDV dâhildir. Sipariş özetinde gösterilen toplam bedel, ürün bedeli ile varsa kargo ücretinin toplamıdır.</p>
 <h4>3. Ödeme ve Teslimat</h4>
-<p>Ödemeler, lisanslı ödeme kuruluşu <b>iyzico</b> altyapısı üzerinden (3D Secure dâhil) alınır; kart bilgileri Satıcı tarafından görülmez ve saklanmaz. Ürünler, sipariş onayından itibaren yasal azami 30 gün içinde anlaşmalı kargo ile Alıcı'nın bildirdiği adrese teslim edilir. Kişiye özel üretilen ürünlerde üretim süresi bu süreye eklenir ve ürün sayfasında belirtilir.</p>
+<p>Ödemeler, anlaşmalı bankanın 3D Secure destekli güvenli ödeme altyapısı üzerinden alınır; kart bilgileri Satıcı tarafından görülmez ve saklanmaz. Ürünler, sipariş onayından itibaren yasal azami 30 gün içinde anlaşmalı kargo ile Alıcı'nın bildirdiği adrese teslim edilir. Kişiye özel üretilen ürünlerde üretim süresi bu süreye eklenir ve ürün sayfasında belirtilir.</p>
 <h4>4. Cayma Hakkı</h4>
 <p>Alıcı, ürünü teslim aldığı tarihten itibaren 14 (on dört) gün içinde hiçbir gerekçe göstermeksizin ve cezai şart ödemeksizin cayma hakkına sahiptir. Cayma bildirimi bu süre içinde info@mddstudio.co adresine yazılı olarak iletilir.</p>
 <h4>5. Cayma Hakkının İstisnaları</h4>
@@ -380,13 +383,13 @@ mesafeli: ["Mesafeli Satış Sözleşmesi", `
 <h4>2. Konu</h4>
 <p>İşbu sözleşme, Alıcı'nın mddstudio.co üzerinden elektronik ortamda siparişini verdiği, nitelikleri ve bedeli sipariş özetinde belirtilen ürünlerin satışı ve teslimi ile ilgili olarak 6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği uyarınca tarafların hak ve yükümlülüklerini düzenler.</p>
 <h4>3. Ürün, Bedel ve Ödeme</h4>
-<p>Ürünlerin türü, adedi, satış bedeli ve ödeme şekli sipariş özetinde belirtildiği gibidir ve Alıcı tarafından onaylanmıştır. Fiyatlara KDV dâhildir; kargo bedeli sipariş özetinde ayrıca gösterilir ve aksi belirtilmedikçe Alıcı'ya aittir. Ödemeler <b>iyzico</b> güvenli altyapısı ile alınır; Satıcı kart bilgilerini saklamaz. <b>Satıcı, açık maddi/yazım hatası sonucu yanlış gösterilen fiyat veya stok bilgilerinde siparişi onaylamama ve iptal etme hakkını saklı tutar; bu hâlde tahsil edilen bedel iade edilir.</b></p>
+<p>Ürünlerin türü, adedi, satış bedeli ve ödeme şekli sipariş özetinde belirtildiği gibidir ve Alıcı tarafından onaylanmıştır. Fiyatlara KDV dâhildir; kargo bedeli sipariş özetinde ayrıca gösterilir ve aksi belirtilmedikçe Alıcı'ya aittir. Ödemeler anlaşmalı bankanın 3D Secure destekli güvenli altyapısı ile alınır; Satıcı kart bilgilerini saklamaz. <b>Satıcı, açık maddi/yazım hatası sonucu yanlış gösterilen fiyat veya stok bilgilerinde siparişi onaylamama ve iptal etme hakkını saklı tutar; bu hâlde tahsil edilen bedel iade edilir.</b></p>
 <h4>4. Teslimat</h4>
 <p>Ürünler, sipariş onayından itibaren en geç 30 (otuz) gün içinde anlaşmalı kargo firması ile gönderilir. Kişiye özel üretilen ürünlerde üretim süresi bu süreye eklenir. <b>Alıcı'nın beyan ettiği adres/iletişim bilgilerinin hatalı veya eksik olmasından doğan gecikme ve zararlardan Satıcı sorumlu değildir.</b> Alıcı, teslim sırasında paketi kontrol etmekle; hasar/ezik/kırık durumunda kargo görevlisine <b>tutanak</b> tutturarak ürünü teslim almamakla yükümlüdür. <b>Tutanaksız teslim alınan ürünlerde taşıma kaynaklı hasar sorumluluğu kabul edilmez.</b></p>
 <h4>5. Cayma Hakkı ve İstisnaları</h4>
 <p>Alıcı, teslim tarihinden itibaren 14 gün içinde gerekçe göstermeksizin cayabilir; bildirim info@mddstudio.co adresine yazılı yapılır. <b>İstisnalar:</b> kişiye/isme özel hazırlanan ürünler, ambalajı açılmış ve hijyen açısından iadeye uygun olmayan ürünler ve anında ifa edilen dijital içerikler cayma hakkı kapsamı dışındadır (Yönetmelik md. 15). Cayma hâlinde ürün; faturası ve tüm parçalarıyla, kullanılmamış ve yeniden satılabilir durumda iade edilir. İade, Satıcı'nın bildirdiği anlaşmalı kargo firması ile yapıldığında iade kargo bedeli Alıcı'ya yüklenmez; bunun dışındaki taşıyıcılarla yapılan gönderimlerde masraf ve kayıp/hasar riski Alıcı'ya aittir.</p>
 <h4>6. Bedel İadesi</h4>
-<p>Cayma hâlinde bedel, ürünün Satıcı'ya ulaşması ve uygunluk kontrolünü takiben 14 gün içinde, ödemenin yapıldığı yöntemle (iyzico aracılığıyla) iade edilir. Bankaya/karta yansıma süresi Satıcı'nın kontrolünde değildir.</p>
+<p>Cayma hâlinde bedel, ürünün Satıcı'ya ulaşması ve uygunluk kontrolünü takiben 14 gün içinde, ödemenin yapıldığı yöntemle iade edilir. Bankaya/karta yansıma süresi Satıcı'nın kontrolünde değildir.</p>
 <h4>7. Temerrüt</h4>
 <p>Alıcı, kredi kartı ile ödemede temerrüde düşerse, kart sahibi banka ile arasındaki sözleşme çerçevesinde faiz ödeyeceğini ve bankaya karşı sorumlu olacağını kabul eder.</p>
 <h4>8. Mücbir Sebep</h4>
@@ -410,7 +413,7 @@ iade: ["İade & Teslimat", `
 <h4>İade Koşulları</h4>
 <p>Ürün; kullanılmamış, yeniden satılabilir durumda, orijinal ambalajı ve faturasıyla iade edilmelidir. İade, Satıcı'nın bildireceği anlaşmalı kargo firması ile gönderildiğinde iade kargo bedeli sizden alınmaz; farklı taşıyıcıyla yapılan gönderimin bedeli ve kaybolma/hasar riski gönderene aittir.</p>
 <h4>Bedel İadesi</h4>
-<p>Ürünün Satıcı'ya ulaşıp uygunluk kontrolünden geçmesini takiben 14 gün içinde ödeme yönteminize (iyzico) iade edilir.</p>
+<p>Ürünün Satıcı'ya ulaşıp uygunluk kontrolünden geçmesini takiben 14 gün içinde ödeme yönteminize iade edilir.</p>
 <h4>Ayıplı Ürün</h4>
 <p>Üretimden kaynaklı ayıplı ürünlerde kargo bedelleri Satıcı'ya aittir; dilerseniz ücretsiz değişim, dilerseniz bedel iadesi talep edebilirsiniz.</p>`],
 
@@ -418,9 +421,9 @@ kvkk: ["KVKK Aydınlatma Metni", `
 <h4>Veri Sorumlusu</h4>
 <p>DİDA Tasarım Ajansı Ltd. Şti. (“Şirket”), 6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) uyarınca veri sorumlusudur. İletişim: Kuzey Ankara Camii Külliyesi, Şenyuva, Şeyhan Cd. No:11 C Blok D:12, Keçiören/Ankara &middot; info@mddstudio.co &middot; 0533 486 28 99</p>
 <h4>İşlenen Veriler ve Amaçlar</h4>
-<p>Sipariş sürecinde ad-soyad, iletişim (e-posta, telefon) ve teslimat adresi bilgileriniz; sözleşmenin kurulması ve ifası, siparişin teslimi, faturalandırma, iletişim ve yasal yükümlülüklerin yerine getirilmesi amaçlarıyla işlenir. <b>Kart/ödeme bilgileriniz Şirket tarafından işlenmez ve saklanmaz;</b> ödeme işlemleri lisanslı ödeme kuruluşu iyzico tarafından gerçekleştirilir.</p>
+<p>Sipariş sürecinde ad-soyad, iletişim (e-posta, telefon) ve teslimat adresi bilgileriniz; sözleşmenin kurulması ve ifası, siparişin teslimi, faturalandırma, iletişim ve yasal yükümlülüklerin yerine getirilmesi amaçlarıyla işlenir. <b>Kart/ödeme bilgileriniz Şirket tarafından işlenmez ve saklanmaz;</b> ödeme işlemleri anlaşmalı bankanın güvenli ödeme altyapısında gerçekleştirilir.</p>
 <h4>Aktarım</h4>
-<p>Verileriniz; teslimat için anlaşmalı kargo firmasına, ödeme için iyzico'ya, barındırma/altyapı için Cloudflare'e, muhasebe/fatura için mali müşavire ve yasal yükümlülükler kapsamında yetkili kamu kurumlarına, amaçla sınırlı olarak aktarılabilir.</p>
+<p>Verileriniz; teslimat için anlaşmalı kargo firmasına, ödeme için anlaşmalı bankaya, barındırma/altyapı için Cloudflare'e, muhasebe/fatura için mali müşavire ve yasal yükümlülükler kapsamında yetkili kamu kurumlarına, amaçla sınırlı olarak aktarılabilir.</p>
 <h4>Hukuki Sebep ve Saklama</h4>
 <p>Veriler KVKK md. 5/2 (c) sözleşmenin ifası ve (ç) hukuki yükümlülük sebeplerine dayanılarak işlenir; ilgili mevzuattaki süreler (vergi mevzuatı gereği asgari 5, TTK gereği 10 yıl) boyunca saklanır, sonrasında imha edilir.</p>
 <h4>Haklarınız (md. 11)</h4>
@@ -430,11 +433,11 @@ gizlilik: ["Gizlilik & Çerez Politikası", `
 <h4>Genel</h4>
 <p>MDD Studio (DİDA Tasarım Ajansı Ltd. Şti.) olarak gizliliğinize önem veriyoruz. Bu politika, mddstudio.co'yu kullanırken verilerinizin nasıl işlendiğini ve çerez kullanımını açıklar.</p>
 <h4>Toplanan Veriler</h4>
-<p>Yalnızca siparişin ve iletişimin gerektirdiği veriler (ad-soyad, iletişim, teslimat adresi) toplanır. Ödeme verileri sitede tutulmaz; iyzico tarafından işlenir.</p>
+<p>Yalnızca siparişin ve iletişimin gerektirdiği veriler (ad-soyad, iletişim, teslimat adresi) toplanır. Ödeme verileri sitede tutulmaz; anlaşmalı banka tarafından işlenir.</p>
 <h4>Çerezler</h4>
 <p>Sitemiz, temel işlevlerin (dil tercihi, sepet oturumu) çalışması için <b>zorunlu çerezler</b> kullanır. Pazarlama amaçlı üçüncü taraf takip çerezi kullanılmaz. Tarayıcı ayarlarınızdan çerezleri yönetebilir/silebilirsiniz; ancak zorunlu çerezlerin engellenmesi bazı işlevleri etkileyebilir.</p>
 <h4>Üçüncü Taraf Hizmetler</h4>
-<p>Ödeme (iyzico), barındırma/CDN (Cloudflare) ve kargo hizmetleri için gerekli asgari veriler, yalnızca hizmetin ifası amacıyla ilgili sağlayıcılarla paylaşılır.</p>
+<p>Ödeme (anlaşmalı banka), barındırma/CDN (Cloudflare) ve kargo hizmetleri için gerekli asgari veriler, yalnızca hizmetin ifası amacıyla ilgili sağlayıcılarla paylaşılır.</p>
 <h4>Veri Güvenliği</h4>
 <p>Site HTTPS ile şifreli sunulur; verileriniz için makul teknik ve idari tedbirler alınır. Ayrıntı için KVKK Aydınlatma Metni'ne bakınız.</p>
 <h4>İletişim</h4>
@@ -470,7 +473,7 @@ const CATS=[
   {id:"oyun",name:"Oyun",bg:"var(--lav-soft)",soon:1},
   {id:"oyuncak",name:"Oyuncak",bg:"var(--blush)",soon:1}
 ];
-/* id'ler functions/api/checkout.js içindeki CATALOG ile aynı olmalı */
+/* id'ler functions/_order.js içindeki CATALOG ile aynı olmalı */
 const P=[
  {id:"m1",cat:"sticker",name:"Ödül Sticker Seti — Aferin · Maşallah · Tebrikler (Kız)",price:99,f:"odul-kiz",best:1},
  {id:"m2",cat:"sticker",name:"Kuran Okuyorum Sticker Seti (Erkek Çocuk)",price:89,f:"kuran-okuyorum",best:1},
@@ -563,14 +566,14 @@ $("#gadd").onclick=e=>addToCart(galP.id,e.currentTarget);
 /* legal */
 function openLegal(key){const d=LEGAL[key];if(!d)return;$("#legal-title").textContent=d[0];$("#legal-body").innerHTML=d[1];$("#legal-modal").hidden=false}
 
-/* checkout (iyzico, functions/api/checkout.js) */
+/* sipariş talebi (functions/api/order.js) */
 /* CAPTCHA: Cloudflare Turnstile (site anahtarı /api/config'ten gelir; tanımlı değilse gösterilmez) */
 let tsKey=null,tsWidget=null,cfg=null,cfgP=null,tsScriptP=null;
 function getConfig(){if(!cfgP)cfgP=fetch("/api/config").then(r=>r.json()).then(c=>{cfg=c;tsKey=c.turnstileSiteKey;return c}).catch(()=>{cfgP=null;return cfg={}});return cfgP}
 function tsScript(){if(!tsScriptP)tsScriptP=new Promise((ok,no)=>{const sc=document.createElement("script");sc.src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";sc.async=true;sc.onload=ok;sc.onerror=()=>{tsScriptP=null;no()};document.head.appendChild(sc)});return tsScriptP}
 async function renderTs(el){const c=await getConfig();if(!c.turnstileSiteKey||!el)return null;await tsScript();el.innerHTML="";return window.turnstile.render(el,{sitekey:c.turnstileSiteKey,language:"tr",theme:"light"})}
 function loadTurnstile(){if(tsWidget!=null)return;renderTs($("#ts-box")).then(w=>{tsWidget=w}).catch(()=>{})}
-$("#goCheckout").onclick=()=>{$("#checkout-error").textContent="";openCart(false);prefillCheckout();$("#checkout-modal").hidden=false;$("#co-name").focus();loadTurnstile()};
+$("#goCheckout").onclick=()=>{$("#checkout-error").textContent="";$("#co-done").hidden=true;$("#co-main").hidden=false;openCart(false);prefillCheckout();$("#checkout-modal").hidden=false;$("#co-name").focus();loadTurnstile()};
 $("#checkout-form").addEventListener("submit",async e=>{
   e.preventDefault();
   const btn=$("#pay-btn"),err=$("#checkout-error");
@@ -580,15 +583,21 @@ $("#checkout-form").addEventListener("submit",async e=>{
   const buyer={name:fd.get("name"),surname:fd.get("surname"),email:fd.get("email"),phone:fd.get("phone"),address:fd.get("address"),city:fd.get("city")};
   let cfToken="";
   if(tsKey){cfToken=window.turnstile&&tsWidget!=null?window.turnstile.getResponse(tsWidget):"";if(!cfToken){err.textContent="Lütfen güvenlik doğrulamasını tamamlayın.";return}}
-  err.textContent="";btn.disabled=true;btn.textContent="Yönlendiriliyor…";
+  err.textContent="";btn.disabled=true;btn.textContent="Gönderiliyor…";
   try{
-    const r=await fetch("/api/checkout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({items,buyer,cfToken})});
+    const r=await fetch("/api/order",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({items,buyer,cfToken})});
     const d=await r.json();
-    if(d.paymentPageUrl){location.href=d.paymentPageUrl;return}
-    err.textContent=d.error||"Ödeme başlatılamadı.";
+    if(d.ok){
+      cart={};renderCart();
+      btn.disabled=false;btn.textContent="Siparişi gönder";
+      $("#co-main").hidden=true;$("#co-done").hidden=false;
+      $("#co-done").innerHTML=`<h3>Siparişiniz alındı, teşekkürler!</h3><p>Sipariş numaranız: <b>${escH(d.orderNo)}</b> · Tutar: <b>${escH(d.total)} ₺</b></p><p>Onay e-postasını <b>${escH(buyer.email)}</b> adresine gönderdik. Ödeme bilgilerini en kısa sürede aynı adrese ileteceğiz.</p><button class="btn" type="button" data-close="checkout-modal" style="margin-top:12px">Alışverişe devam et</button>`;
+      return;
+    }
+    err.textContent=d.error||"Sipariş gönderilemedi.";
   }catch(ex){err.textContent="Bağlantı hatası, tekrar deneyin."}
   if(tsKey&&window.turnstile&&tsWidget!=null)window.turnstile.reset(tsWidget);
-  btn.disabled=false;btn.textContent="iyzico ile öde";
+  btn.disabled=false;btn.textContent="Siparişi gönder";
 });
 
 document.addEventListener("click",e=>{
@@ -733,6 +742,7 @@ $("#accBtn").onclick=()=>openAccount();
 (async function initAccount(){
   const u=new URLSearchParams(location.search);let clean=false;
   const r=await api("/api/auth/me");setMe(r.user||null);
+  if(u.get("belge")&&LEGAL[u.get("belge")]){clean=true;openLegal(u.get("belge"))}
   if(u.get("sifre")){resetToken=u.get("sifre");clean=true;openAccount("reset")}
   else if(u.get("giris")){clean=true;openAccount(me?"account":"login")}
   const h=u.get("hesap");
