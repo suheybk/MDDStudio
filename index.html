@@ -302,6 +302,7 @@ footer{margin-top:40px;margin-inline:-16px;padding:32px 16px calc(26px + env(saf
       <input id="co-address" name="address" placeholder="Adres" required autocomplete="street-address">
       <input id="co-city" name="city" placeholder="Şehir" required autocomplete="address-level1">
       <p class="consent">Ödemeye geçerek <button type="button" data-legal="onbilgi">Ön Bilgilendirme Formu</button>'nu ve <button type="button" data-legal="mesafeli">Mesafeli Satış Sözleşmesi</button>'ni okuduğunuzu kabul edersiniz.</p>
+      <div id="ts-box" style="min-height:0"></div>
       <div id="checkout-error" class="co-err"></div>
       <button type="submit" id="pay-btn" class="btn pay">iyzico ile öde</button>
     </form>
@@ -530,7 +531,17 @@ $("#gadd").onclick=e=>addToCart(galP.id,e.currentTarget);
 function openLegal(key){const d=LEGAL[key];if(!d)return;$("#legal-title").textContent=d[0];$("#legal-body").innerHTML=d[1];$("#legal-modal").hidden=false}
 
 /* checkout (iyzico, functions/api/checkout.js) */
-$("#goCheckout").onclick=()=>{$("#checkout-error").textContent="";openCart(false);$("#checkout-modal").hidden=false;$("#co-name").focus()};
+/* CAPTCHA: Cloudflare Turnstile (site anahtarı /api/config'ten gelir; tanımlı değilse gösterilmez) */
+let tsKey=null,tsWidget=null,tsLoading=null;
+function loadTurnstile(){
+  if(tsLoading)return tsLoading;
+  tsLoading=fetch("/api/config").then(r=>r.json()).then(c=>{tsKey=c.turnstileSiteKey;if(!tsKey)return;
+    return new Promise((ok,no)=>{const sc=document.createElement("script");sc.src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";sc.async=true;sc.onload=ok;sc.onerror=no;document.head.appendChild(sc)})
+      .then(()=>{tsWidget=window.turnstile.render("#ts-box",{sitekey:tsKey,language:"tr",theme:"light"})});
+  }).catch(()=>{tsLoading=null});
+  return tsLoading;
+}
+$("#goCheckout").onclick=()=>{$("#checkout-error").textContent="";openCart(false);$("#checkout-modal").hidden=false;$("#co-name").focus();loadTurnstile()};
 $("#checkout-form").addEventListener("submit",async e=>{
   e.preventDefault();
   const btn=$("#pay-btn"),err=$("#checkout-error");
@@ -538,13 +549,16 @@ $("#checkout-form").addEventListener("submit",async e=>{
   if(!items.length){err.textContent="Sepetiniz boş.";return}
   const fd=new FormData(e.target);
   const buyer={name:fd.get("name"),surname:fd.get("surname"),email:fd.get("email"),phone:fd.get("phone"),address:fd.get("address"),city:fd.get("city")};
+  let cfToken="";
+  if(tsKey){cfToken=window.turnstile&&tsWidget!=null?window.turnstile.getResponse(tsWidget):"";if(!cfToken){err.textContent="Lütfen güvenlik doğrulamasını tamamlayın.";return}}
   err.textContent="";btn.disabled=true;btn.textContent="Yönlendiriliyor…";
   try{
-    const r=await fetch("/api/checkout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({items,buyer})});
+    const r=await fetch("/api/checkout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({items,buyer,cfToken})});
     const d=await r.json();
     if(d.paymentPageUrl){location.href=d.paymentPageUrl;return}
     err.textContent=(d.error||"Ödeme başlatılamadı.")+(d.code?" ("+d.code+")":"");
   }catch(ex){err.textContent="Bağlantı hatası, tekrar deneyin."}
+  if(tsKey&&window.turnstile&&tsWidget!=null)window.turnstile.reset(tsWidget);
   btn.disabled=false;btn.textContent="iyzico ile öde";
 });
 
