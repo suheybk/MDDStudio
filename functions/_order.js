@@ -52,7 +52,7 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "
 //   CF_ACCOUNT_ID   : (opsiyonel) varsayılan aşağıda
 //   ORDER_EMAIL_TO  : (opsiyonel) varsayılan info@mddstudio.co
 //   ORDER_EMAIL_FROM: (opsiyonel) varsayılan siparis@mddstudio.co
-export async function sendOrderMail(env, { payment, order, live }) {
+export async function sendOrderMail(env, { payment, order, live, unverified = false, token = "" }) {
   const to = env.ORDER_EMAIL_TO || "info@mddstudio.co";
   const from = env.ORDER_EMAIL_FROM || "siparis@mddstudio.co";
   const b = (order && order.b) || {};
@@ -60,11 +60,17 @@ export async function sendOrderMail(env, { payment, order, live }) {
     .map(([id, q]) => ({ id, q, n: (CATALOG[id] || {}).n || id, p: ((CATALOG[id] || {}).p || 0) * q }));
   const who = [b.n, b.s].filter(Boolean).join(" ") || "Müşteri";
   const amount = payment.paidPrice || lines.reduce((a, l) => a + l.p, 0);
-  const subject = `${live ? "" : "[TEST] "}SİPARİŞ · ${who} · ${amount} ₺ · #${payment.paymentId || ""}`;
+  const subject = unverified
+    ? `${live ? "" : "[TEST] "}SİPARİŞ – KONTROL EDİN · ${who} · ${amount} ₺ · ödeme doğrulanamadı`
+    : `${live ? "" : "[TEST] "}SİPARİŞ · ${who} · ${amount} ₺ · #${payment.paymentId || ""}`;
+  const warn = unverified
+    ? `Müşteri ödeme sayfasından döndü ama ödeme sonucu ödeme sağlayıcısından sorgulanamadı. Ödemenin alınıp alınmadığını sağlayıcının panelinden kontrol edin (token: ${token || "-"}). Ödeme alındıysa siparişi hazırlayın.`
+    : "";
   const when = new Date().toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" });
 
   const text = [
-    `YENİ SİPARİŞ${live ? "" : " (iyzico test modu)"}`,
+    `YENİ SİPARİŞ${live ? "" : " (test modu)"}${unverified ? " – ÖDEME DOĞRULANAMADI" : ""}`,
+    ...(warn ? [warn, ""] : []),
     `Sipariş no: ${payment.paymentId || "-"}   Tarih: ${when}`,
     `Tutar: ${amount} ₺`, "",
     "Müşteri", `${who}`, `E-posta: ${b.e || "-"}`, `Telefon: ${b.p || "-"}`, "",
@@ -73,8 +79,9 @@ export async function sendOrderMail(env, { payment, order, live }) {
   ].join("\n");
 
   const html = `<div style="font-family:Arial,sans-serif;color:#1F2A56;max-width:560px">
-<h2 style="margin:0 0 4px">Yeni sipariş${live ? "" : " <span style='color:#C2789E'>(test modu)</span>"}</h2>
-<p style="margin:0 0 16px;color:#6B6F8E">Sipariş no <b>${esc(payment.paymentId)}</b> · ${esc(when)}</p>
+<h2 style="margin:0 0 4px">Yeni sipariş${unverified ? " – kontrol edin" : ""}${live ? "" : " <span style='color:#C2789E'>(test modu)</span>"}</h2>
+${warn ? `<p style="margin:0 0 14px;padding:10px 12px;background:#FFF1C9;border-radius:8px"><b>Ödeme doğrulanamadı.</b> ${esc(warn)}</p>` : ""}
+<p style="margin:0 0 16px;color:#6B6F8E">Sipariş no <b>${esc(payment.paymentId || "-")}</b> · ${esc(when)}</p>
 <table style="border-collapse:collapse;width:100%;font-size:14px">
 <tr><td style="padding:6px 0;color:#6B6F8E;width:120px">Müşteri</td><td><b>${esc(who)}</b></td></tr>
 <tr><td style="padding:6px 0;color:#6B6F8E">E-posta</td><td>${esc(b.e || "-")}</td></tr>
