@@ -191,6 +191,33 @@ footer{margin-top:40px;margin-inline:-16px;padding:32px 16px calc(26px + env(saf
 .co-err{color:#a8325f;font-size:.85rem;min-height:18px}
 .consent{font-size:.8rem;color:var(--muted)}
 .consent button{background:none;border:0;padding:0;color:var(--rose-d);text-decoration:underline;font-size:inherit}
+/* hesap */
+#account-modal .mbox{width:min(440px,100%)}
+.acc-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.acc-h h3{margin:0}
+.acc-x{border:0;background:var(--blush);width:36px;height:36px;border-radius:50%;flex:none}
+.acc-sub{margin:0 0 14px;color:var(--muted);font-size:.9rem}
+.acc-form{display:flex;flex-direction:column;gap:10px}
+.acc-form label{font:700 .8rem "Quicksand",sans-serif;color:var(--navy-2);display:flex;flex-direction:column;gap:4px}
+.acc-form label small{font:400 .75rem "Nunito",sans-serif;color:var(--muted)}
+.acc-form input[type=text],.acc-form input[type=email],.acc-form input[type=tel],.acc-form input[type=password]{width:100%;padding:11px 14px;border:2px solid var(--line);border-radius:12px;background:var(--card);font:600 .95rem "Nunito",sans-serif;color:var(--navy)}
+.acc-form input:focus{outline:none;border-color:var(--lav)}
+.pw{position:relative}.pw input{padding-right:64px!important}
+.pw button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:var(--blush);border-radius:999px;padding:4px 10px;font:700 .72rem "Quicksand",sans-serif}
+.acc-check{flex-direction:row!important;align-items:flex-start;gap:8px!important;font:400 .82rem "Nunito",sans-serif!important}
+.acc-check input{margin-top:3px}
+.acc-links{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.84rem;margin-top:4px}
+.acc-links button,.acc-alt button{background:none;border:0;padding:0;color:var(--rose-d);text-decoration:underline;font:600 .84rem "Nunito",sans-serif}
+.acc-alt{margin-top:14px;font-size:.88rem;text-align:center;color:var(--muted)}
+.acc-msg{font-size:.88rem;min-height:1em}
+.acc-msg.err{color:#a8325f}.acc-msg.ok{color:#2f7a3a}
+.or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.8rem;margin:6px 0}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:2px solid var(--line);background:var(--card);border-radius:999px;padding:10px;font:700 .92rem "Quicksand",sans-serif;text-decoration:none;color:var(--navy)}
+.gbtn:hover{border-color:var(--lav)}
+.hint{background:var(--mint);border-radius:12px;padding:10px 12px;font-weight:700;text-align:center;font-size:1.02rem;margin-top:6px}
+.verify-note{background:var(--butter);border-radius:12px;padding:8px 12px;font-size:.84rem;margin-bottom:10px}
+#accBtn .ini{font:800 .8rem "Nunito",sans-serif}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--navy);color:var(--on-navy);padding:10px 18px;border-radius:999px;font:700 .9rem "Quicksand",sans-serif;z-index:90}
 </style>
 </head>
@@ -202,6 +229,7 @@ footer{margin-top:40px;margin-inline:-16px;padding:32px 16px calc(26px + env(saf
     <a class="brand" href="#top" aria-label="MDD Studio ana sayfa"><img src="/brand/mdd-logo-horizontal.svg" alt="MDD Studio" width="169" height="44"></a>
     <label class="search" for="q"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Sticker, defter, kart ara…" autocomplete="off" aria-label="Ürün ara"></label>
     <div class="icons">
+      <button class="ib" id="accBtn" type="button" aria-label="Hesabım"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></button>
       <a class="ib" href="#favoriler" aria-label="Favoriler"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/></svg><span class="n" id="favCount" hidden>0</span></a>
       <button class="ib" id="openCart" type="button" aria-label="Sepeti aç"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 11H6.2L5 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg><span class="n" id="count">0</span></button>
     </div>
@@ -310,6 +338,9 @@ footer{margin-top:40px;margin-inline:-16px;padding:32px 16px calc(26px + env(saf
     <p class="note">Ödeme iyzico güvenli sayfasında alınır; kart bilgileriniz sitemizde saklanmaz. 3D Secure destekli.</p>
     <button class="btn" type="button" data-close="checkout-modal" style="background:var(--blush);color:var(--ink);box-shadow:none;margin-top:8px">Vazgeç</button>
   </div>
+</div>
+<div class="modal" id="account-modal" hidden role="dialog" aria-modal="true" aria-label="Hesabım">
+  <div class="mbox" id="acc-box"></div>
 </div>
 <div class="toast" id="toast" hidden></div>
 
@@ -534,16 +565,12 @@ function openLegal(key){const d=LEGAL[key];if(!d)return;$("#legal-title").textCo
 
 /* checkout (iyzico, functions/api/checkout.js) */
 /* CAPTCHA: Cloudflare Turnstile (site anahtarı /api/config'ten gelir; tanımlı değilse gösterilmez) */
-let tsKey=null,tsWidget=null,tsLoading=null;
-function loadTurnstile(){
-  if(tsLoading)return tsLoading;
-  tsLoading=fetch("/api/config").then(r=>r.json()).then(c=>{tsKey=c.turnstileSiteKey;if(!tsKey)return;
-    return new Promise((ok,no)=>{const sc=document.createElement("script");sc.src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";sc.async=true;sc.onload=ok;sc.onerror=no;document.head.appendChild(sc)})
-      .then(()=>{tsWidget=window.turnstile.render("#ts-box",{sitekey:tsKey,language:"tr",theme:"light"})});
-  }).catch(()=>{tsLoading=null});
-  return tsLoading;
-}
-$("#goCheckout").onclick=()=>{$("#checkout-error").textContent="";openCart(false);$("#checkout-modal").hidden=false;$("#co-name").focus();loadTurnstile()};
+let tsKey=null,tsWidget=null,cfg=null,cfgP=null,tsScriptP=null;
+function getConfig(){if(!cfgP)cfgP=fetch("/api/config").then(r=>r.json()).then(c=>{cfg=c;tsKey=c.turnstileSiteKey;return c}).catch(()=>{cfgP=null;return cfg={}});return cfgP}
+function tsScript(){if(!tsScriptP)tsScriptP=new Promise((ok,no)=>{const sc=document.createElement("script");sc.src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";sc.async=true;sc.onload=ok;sc.onerror=()=>{tsScriptP=null;no()};document.head.appendChild(sc)});return tsScriptP}
+async function renderTs(el){const c=await getConfig();if(!c.turnstileSiteKey||!el)return null;await tsScript();el.innerHTML="";return window.turnstile.render(el,{sitekey:c.turnstileSiteKey,language:"tr",theme:"light"})}
+function loadTurnstile(){if(tsWidget!=null)return;renderTs($("#ts-box")).then(w=>{tsWidget=w}).catch(()=>{})}
+$("#goCheckout").onclick=()=>{$("#checkout-error").textContent="";openCart(false);prefillCheckout();$("#checkout-modal").hidden=false;$("#co-name").focus();loadTurnstile()};
 $("#checkout-form").addEventListener("submit",async e=>{
   e.preventDefault();
   const btn=$("#pay-btn"),err=$("#checkout-error");
@@ -584,6 +611,134 @@ $("#clearF").onclick=()=>{active=null;query="";$("#q").value="";renderAll()};
 $("#q").addEventListener("input",e=>{query=e.target.value.trim();renderResults()});
 $("#openCart").onclick=()=>openCart(true);
 $("#closeCart").onclick=$("#scrim").onclick=()=>openCart(false);
+/* ================= Müşteri hesabı ================= */
+let me=null,accTs=null,resetToken=null;
+const escH=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+async function api(path,body){
+  try{
+    const r=await fetch(path,{method:body?"POST":"GET",headers:body?{"Content-Type":"application/json"}:{},credentials:"same-origin",body:body?JSON.stringify(body):undefined});
+    let d={};try{d=await r.json()}catch(e){d={error:"Sunucu yanıtı okunamadı, tekrar deneyin."}}
+    return {ok:r.ok,status:r.status,...d};
+  }catch(e){return {ok:false,error:"Bağlantı hatası, tekrar deneyin."}}
+}
+const PERSON='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>';
+function setMe(u){
+  me=u;const b=$("#accBtn");
+  if(u){const ini=(u.name||u.email).split(/\s+/).filter(Boolean).map(x=>x[0]).slice(0,2).join("").toLocaleUpperCase("tr");
+    b.innerHTML=`<span class="ini">${escH(ini)}</span>`;b.setAttribute("aria-label","Hesabım: "+u.name);b.style.background="var(--blush)"}
+  else{b.innerHTML=PERSON;b.setAttribute("aria-label","Hesabım");b.style.background=""}
+}
+function prefillCheckout(){
+  if(!me)return;const parts=(me.name||"").trim().split(/\s+/);const sur=parts.length>1?parts.pop():"";
+  const set=(id,v)=>{const el=$(id);if(el&&!el.value&&v)el.value=v};
+  set("#co-name",parts.join(" "));set("#co-surname",sur);set("#co-email",me.email);set("#co-phone",me.phone?"0"+me.phone:"");set("#co-address",me.address);set("#co-city",me.city);
+}
+const pwField=(id,label,ac)=>`<label>${label}<span class="pw"><input id="${id}" type="password" autocomplete="${ac}" required minlength="8"><button type="button" data-pw="${id}">Göster</button></span></label>`;
+const hdr=(t,sub)=>`<div class="acc-h"><h3>${t}</h3><button class="acc-x" type="button" data-close="account-modal" aria-label="Kapat">✕</button></div>${sub?`<p class="acc-sub">${sub}</p>`:""}`;
+const GLOGO='<svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.3-.4-3.5z"/></svg>';
+const gBlock=()=>cfg&&cfg.googleLogin?`<a class="gbtn" href="/api/auth/google">${GLOGO}Google ile devam et</a><div class="or">ya da</div>`:"";
+const back=`<p class="acc-alt"><button type="button" data-view="login">Girişe dön</button></p>`;
+const VIEWS={
+ login:()=>hdr("Giriş yap","Siparişlerinizi hızlıca tamamlamak için hesabınıza giriş yapın.")+gBlock()+`<form class="acc-form" data-af="login">
+  <label>E-posta ya da kullanıcı adı<input id="a-login" type="text" autocomplete="username" required></label>
+  ${pwField("a-pass","Şifre","current-password")}
+  <div class="acc-ts"></div><div class="acc-msg" role="alert"></div>
+  <button class="btn pay" type="submit">Giriş yap</button>
+  <div class="acc-links"><button type="button" data-view="forgotPw">Şifremi unuttum</button><button type="button" data-view="forgotUser">Kullanıcı adımı unuttum</button><button type="button" data-view="forgotEmail">E-postamı unuttum</button></div>
+ </form><p class="acc-alt">Hesabınız yok mu? <button type="button" data-view="register">Kayıt olun</button></p>`,
+ register:()=>hdr("Kayıt ol","Birkaç bilgiyle hesabınızı oluşturun.")+gBlock()+`<form class="acc-form" data-af="register">
+  <label>Ad soyad<input id="r-name" type="text" autocomplete="name" required maxlength="80"></label>
+  <label>E-posta<input id="r-email" type="email" autocomplete="email" required></label>
+  <label>Kullanıcı adı <small>İsteğe bağlı · 3–24 karakter; harf, rakam, nokta, alt çizgi</small><input id="r-user" type="text" autocomplete="username" pattern="[A-Za-z0-9_.]{3,24}"></label>
+  <label>Telefon <small>İsteğe bağlı · e-postanızı unutursanız hesabınızı bulmak için</small><input id="r-phone" type="tel" autocomplete="tel" placeholder="05xx xxx xx xx"></label>
+  ${pwField("r-pass","Şifre <small>En az 8 karakter, en az bir harf ve bir rakam</small>","new-password")}
+  <label class="acc-check"><input id="r-kvkk" type="checkbox" required><span><button type="button" data-legal="kvkk" style="background:none;border:0;padding:0;color:var(--rose-d);text-decoration:underline;font:inherit">KVKK Aydınlatma Metni</button>'ni okudum; üyelik bilgilerimin bu kapsamda işlenmesini kabul ediyorum.</span></label>
+  <div class="acc-ts"></div><div class="acc-msg" role="alert"></div>
+  <button class="btn pay" type="submit">Hesap oluştur</button>
+ </form><p class="acc-alt">Zaten hesabınız var mı? <button type="button" data-view="login">Giriş yapın</button></p>`,
+ forgotPw:()=>hdr("Şifremi unuttum","E-posta adresinizi ya da kullanıcı adınızı yazın; şifre sıfırlama bağlantısını e-postanıza gönderelim.")+`<form class="acc-form" data-af="forgotPw">
+  <label>E-posta ya da kullanıcı adı<input id="f-login" type="text" autocomplete="username" required></label>
+  <div class="acc-ts"></div><div class="acc-msg" role="alert"></div>
+  <button class="btn pay" type="submit">Bağlantı gönder</button></form>`+back,
+ forgotUser:()=>hdr("Kullanıcı adımı unuttum","Hesabınızın e-posta adresini yazın; kullanıcı adınızı bu adrese gönderelim.")+`<form class="acc-form" data-af="forgotUser">
+  <label>E-posta<input id="u-email" type="email" autocomplete="email" required></label>
+  <div class="acc-ts"></div><div class="acc-msg" role="alert"></div>
+  <button class="btn pay" type="submit">Kullanıcı adımı gönder</button></form>`+back,
+ forgotEmail:()=>hdr("E-postamı unuttum","Hesabınıza kayıtlı telefon numaranızı ya da kullanıcı adınızı yazın; hangi e-posta adresiyle kayıt olduğunuzu (bir kısmı gizli olarak) gösterelim.")+`<form class="acc-form" data-af="forgotEmail">
+  <label>Telefon ya da kullanıcı adı<input id="e-q" type="text" required placeholder="05xx xxx xx xx ya da kullanıcı adı"></label>
+  <div class="acc-ts"></div><div class="acc-msg" role="alert"></div>
+  <button class="btn pay" type="submit">Hesabımı bul</button></form><p class="acc-alt"><button type="button" data-view="login">Girişe dön</button> · <button type="button" data-view="forgotPw">Şifremi unuttum</button></p>`,
+ reset:()=>hdr("Yeni şifre belirleyin","Hesabınız için yeni bir şifre belirleyin.")+`<form class="acc-form" data-af="reset">
+  ${pwField("n-pass","Yeni şifre <small>En az 8 karakter, en az bir harf ve bir rakam</small>","new-password")}
+  ${pwField("n-pass2","Yeni şifre (tekrar)","new-password")}
+  <div class="acc-msg" role="alert"></div>
+  <button class="btn pay" type="submit">Şifremi kaydet</button></form>`,
+ account:()=>hdr("Hesabım",`Merhaba ${escH(me.name)} · ${escH(me.email)}`)+(me.emailVerified?"":`<div class="verify-note">E-posta adresiniz henüz doğrulanmadı. Size gönderdiğimiz bağlantıya tıklayın.</div>`)+`<form class="acc-form" data-af="profile">
+  <label>Ad soyad<input id="p-name" type="text" autocomplete="name" value="${escH(me.name)}" maxlength="80"></label>
+  <label>Kullanıcı adı<input id="p-user" type="text" autocomplete="username" value="${escH(me.username)}" pattern="[A-Za-z0-9_.]{3,24}"></label>
+  <label>Telefon<input id="p-phone" type="tel" autocomplete="tel" value="${me.phone?"0"+escH(me.phone):""}" placeholder="05xx xxx xx xx"></label>
+  <label>Teslimat adresi<input id="p-address" type="text" autocomplete="street-address" value="${escH(me.address)}" maxlength="200"></label>
+  <label>Şehir<input id="p-city" type="text" autocomplete="address-level1" value="${escH(me.city)}" maxlength="40"></label>
+  <div class="acc-msg" role="alert"></div>
+  <button class="btn pay" type="submit">Bilgilerimi kaydet</button>
+ </form><p class="acc-alt">${me.hasPassword?"":'Hesabınızda şifre yok (Google ile giriş). <button type="button" data-view="forgotPw">Şifre belirle</button><br>'}<button type="button" id="logoutBtn">Çıkış yap</button></p>`
+};
+async function openAccount(view){
+  await getConfig();
+  view=view||(me?"account":"login");
+  if(view==="account"&&!me)view="login";
+  $("#acc-box").innerHTML=VIEWS[view]();
+  $("#account-modal").hidden=false;
+  accTs=null;const tsEl=$("#acc-box .acc-ts");
+  if(tsEl)renderTs(tsEl).then(w=>{accTs=w}).catch(()=>{});
+  const first=$("#acc-box input");if(first)first.focus();
+}
+function accMsg(t,ok){const m=$("#acc-box .acc-msg");if(m){m.textContent=t||"";m.className="acc-msg "+(ok?"ok":"err")}}
+function accToken(){if(!cfg||!cfg.turnstileSiteKey)return "";return window.turnstile&&accTs!=null?(window.turnstile.getResponse(accTs)||""):""}
+function needTs(){if(cfg&&cfg.turnstileSiteKey&&!accToken()){accMsg("Lütfen güvenlik doğrulamasını tamamlayın.");return true}return false}
+const val=id=>($(id)||{}).value||"";
+document.addEventListener("submit",async e=>{
+  const f=e.target.closest("[data-af]");if(!f)return;e.preventDefault();
+  const kind=f.dataset.af,btn=f.querySelector("button[type=submit]");let r;
+  if(["login","register","forgotPw","forgotUser","forgotEmail"].includes(kind)&&needTs())return;
+  if(kind==="reset"&&val("#n-pass")!==val("#n-pass2")){accMsg("Şifreler aynı değil.");return}
+  btn.disabled=true;accMsg("",true);
+  const cf=accToken();
+  if(kind==="login")r=await api("/api/auth/login",{login:val("#a-login"),password:val("#a-pass"),cfToken:cf});
+  else if(kind==="register")r=await api("/api/auth/register",{name:val("#r-name"),email:val("#r-email"),username:val("#r-user"),phone:val("#r-phone"),password:val("#r-pass"),kvkk:$("#r-kvkk").checked,cfToken:cf});
+  else if(kind==="forgotPw")r=await api("/api/auth/forgot-password",{login:val("#f-login"),cfToken:cf});
+  else if(kind==="forgotUser")r=await api("/api/auth/forgot-username",{email:val("#u-email"),cfToken:cf});
+  else if(kind==="forgotEmail")r=await api("/api/auth/forgot-email",{query:val("#e-q"),cfToken:cf});
+  else if(kind==="reset")r=await api("/api/auth/reset-password",{token:resetToken,password:val("#n-pass")});
+  else if(kind==="profile")r=await api("/api/auth/me",{name:val("#p-name"),username:val("#p-user"),phone:val("#p-phone"),address:val("#p-address"),city:val("#p-city")});
+  btn.disabled=false;
+  if(accTs!=null&&window.turnstile)window.turnstile.reset(accTs);
+  if(r.error){accMsg(r.error);return}
+  if(kind==="login"||kind==="register"||kind==="reset"){
+    setMe(r.user);$("#account-modal").hidden=true;resetToken=null;
+    toast(kind==="register"?"Hesabınız oluşturuldu. Doğrulama e-postası gönderdik.":kind==="reset"?"Şifreniz güncellendi, giriş yapıldı.":"Hoş geldiniz, "+(r.user.name||"").split(" ")[0]);return}
+  if(kind==="profile"){setMe(r.user);accMsg("Bilgileriniz kaydedildi.",true);return}
+  if(kind==="forgotEmail"){
+    if(r.hint){const m=$("#acc-box .acc-msg");m.className="acc-msg ok";m.innerHTML=`Hesabınız şu e-posta adresine kayıtlı:<div class="hint">${escH(r.hint)}</div>`}
+    else accMsg(r.message||"Hesap bulunamadı.");
+    return}
+  accMsg(r.message||"Tamam.",true);
+});
+document.addEventListener("click",async e=>{
+  const v=e.target.closest("[data-view]");if(v){openAccount(v.dataset.view);return}
+  const pw=e.target.closest("[data-pw]");if(pw){const i=$("#"+pw.dataset.pw);i.type=i.type==="password"?"text":"password";pw.textContent=i.type==="password"?"Göster":"Gizle";return}
+  if(e.target.closest("#logoutBtn")){await api("/api/auth/logout",{});setMe(null);$("#account-modal").hidden=true;toast("Çıkış yapıldı");return}
+});
+$("#accBtn").onclick=()=>openAccount();
+(async function initAccount(){
+  const u=new URLSearchParams(location.search);let clean=false;
+  const r=await api("/api/auth/me");setMe(r.user||null);
+  if(u.get("sifre")){resetToken=u.get("sifre");clean=true;openAccount("reset")}
+  else if(u.get("giris")){clean=true;openAccount(me?"account":"login")}
+  const h=u.get("hesap");
+  if(h){clean=true;const M={"dogrulandi":"E-posta adresiniz doğrulandı, teşekkürler.","dogrulama-gecersiz":"Doğrulama bağlantısı geçersiz ya da süresi dolmuş.","google":me?"Google ile giriş yapıldı. Hoş geldiniz!":"Google ile giriş tamamlanamadı.","google-iptal":"Google ile giriş iptal edildi.","google-hata":"Google ile giriş sırasında bir sorun oluştu, tekrar deneyin.","google-kapali":"Google ile giriş şu an kullanılamıyor.","google-dogrulanmamis":"Google hesabınızın e-postası doğrulanmamış."};if(M[h])toast(M[h])}
+  if(clean)history.replaceState(null,"",location.pathname+location.hash);
+})();
 $("#yr").textContent=new Date().getFullYear();
 renderAll();renderCart();
 </script>
