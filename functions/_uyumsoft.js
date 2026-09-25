@@ -5,13 +5,17 @@
 //   UYUMSOFT_ENV       "live" → canlı servis; başka her değerde test servisi (kullanıcı/şifre: Uyumsoft/Uyumsoft)
 //   UYUMSOFT_USER      web servis kullanıcı adı (Text)       — canlıda zorunlu
 //   UYUMSOFT_PASSWORD  web servis şifresi (Secret)           — canlıda zorunlu
-//   SELLER_VKN, SELLER_TITLE, SELLER_TAX_OFFICE, SELLER_STREET, SELLER_DISTRICT, SELLER_CITY,
-//   SELLER_POSTAL, SELLER_PHONE, SELLER_EMAIL, SELLER_WEB   — faturadaki satıcı bilgileri
+//   SELLER_*           (isteğe bağlı) faturadaki satıcı bilgilerini değiştirmek için; varsayılanlar aşağıdaki SELLER
 //   INVOICE_SERIES     3 karakterli seri öneki (örn. MDD); boşsa Uyumsoft'un varsayılan e-arşiv internet serisi
 //   SHIP_CARRIER_VKN, SHIP_CARRIER_NAME                     — kargo firması (internet satışı bilgisi)
 
 const TEST_URL = "https://efaturaws-test.uyum.com.tr/Services/Integration";
 const LIVE_URL = "https://edonusumapi.uyum.com.tr/Services/Integration";
+const SELLER = {
+  vkn: "2951167976", title: "DİDA Tasarım Ajansı Limited Şirketi", office: "Dışkapı",
+  street: "Kuzey Ankara Camii Külliyesi, Şenyuva Mah. Şeyhan Cd. No:11 C D:16", district: "Keçiören", city: "Ankara",
+  postal: "06300", phone: "+905334862899", email: "info@mddstudio.co", web: "https://mddstudio.co",
+};
 const TEST_VKN = "9000500394"; // Uyumsoft test hesabının (Uyumsoft/Uyumsoft) gönderici VKN'si
 
 const x = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[c]));
@@ -24,7 +28,7 @@ export function uyumConfig(env) {
     url: live ? LIVE_URL : TEST_URL,
     user: live ? env.UYUMSOFT_USER : "Uyumsoft",
     pass: live ? env.UYUMSOFT_PASSWORD : "Uyumsoft",
-    ready: !live || !!(env.UYUMSOFT_USER && env.UYUMSOFT_PASSWORD && env.SELLER_VKN),
+    ready: !live || !!(env.UYUMSOFT_USER && env.UYUMSOFT_PASSWORD),
   };
 }
 
@@ -59,13 +63,15 @@ export async function isEInvoiceUser(env, vknTckn) {
 // Satır fiyatları (p) KDV dâhil toplam tutardır; KDV oranı satır bazında (kdv, yüzde).
 export function buildInvoiceXml(env, order) {
   const live = uyumConfig(env).live;
+  // Satıcı (faturayı kesen) — DİDA Tasarım Ajansı; SELLER_* ortam değişkenleriyle değiştirilebilir.
+  // Test ortamında VKN, Uyumsoft test hesabınınki olmak zorunda.
   const s = {
-    vkn: env.SELLER_VKN || (live ? "" : TEST_VKN),
-    title: env.SELLER_TITLE || "DİDA Tasarım Ajansı Ltd. Şti.",
-    office: env.SELLER_TAX_OFFICE || "",
-    street: env.SELLER_STREET || "", district: env.SELLER_DISTRICT || "", city: env.SELLER_CITY || "Ankara",
-    postal: env.SELLER_POSTAL || "", phone: env.SELLER_PHONE || "", email: env.SELLER_EMAIL || "info@mddstudio.co",
-    web: env.SELLER_WEB || "https://mddstudio.co",
+    vkn: env.SELLER_VKN || (live ? SELLER.vkn : TEST_VKN),
+    title: env.SELLER_TITLE || SELLER.title,
+    office: env.SELLER_TAX_OFFICE || SELLER.office,
+    street: env.SELLER_STREET || SELLER.street, district: env.SELLER_DISTRICT || SELLER.district, city: env.SELLER_CITY || SELLER.city,
+    postal: env.SELLER_POSTAL || SELLER.postal, phone: env.SELLER_PHONE || SELLER.phone, email: env.SELLER_EMAIL || SELLER.email,
+    web: env.SELLER_WEB || SELLER.web,
   };
   const b = order.buyer;
   const now = order.paidAt || new Date();
