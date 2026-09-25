@@ -109,12 +109,13 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:va
 .pimg.noimg{cursor:default}
 .lens{position:absolute;width:170px;height:170px;border-radius:50%;border:4px solid var(--card);box-shadow:0 6px 18px rgba(31,42,86,.28);pointer-events:none;background-repeat:no-repeat;display:none;z-index:3}
 .pimg:hover .lens.on{display:block}
-.zhint{position:absolute;left:8px;bottom:8px;background:rgba(255,252,247,.92);color:var(--ink);font:700 .7rem "Quicksand",sans-serif;padding:3px 9px;border-radius:999px;pointer-events:none}
+.zhint{position:absolute;z-index:4;left:8px;bottom:8px;background:rgba(255,252,247,.92);color:var(--ink);font:700 .7rem "Quicksand",sans-serif;padding:3px 9px;border-radius:999px;pointer-events:none}
 .ph2{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:4px;background:linear-gradient(160deg,var(--lav-soft),var(--blush));color:var(--lav)}
 .ph2 small{font:700 .72rem "Quicksand",sans-serif;color:var(--muted)}
-.tag{position:absolute;left:7px;top:7px;background:var(--butter);color:var(--ink);font:700 .7rem "Quicksand",sans-serif;padding:3px 9px;border-radius:999px;z-index:2}
+.tag{position:absolute;left:7px;top:7px;background:var(--butter);color:var(--ink);font:700 .7rem "Quicksand",sans-serif;padding:3px 9px;border-radius:999px;z-index:4}
 .tag.new{background:var(--mint)}
-.fav{position:absolute;right:7px;top:7px;width:32px;height:32px;border-radius:50%;border:0;background:var(--card);color:var(--rose-d);display:grid;place-items:center;font-size:.95rem;z-index:2}
+.fav{position:absolute;right:7px;top:7px;width:32px;height:32px;border-radius:50%;border:0;background:var(--card);color:var(--rose-d);display:grid;place-items:center;font-size:.95rem;z-index:4;box-shadow:0 2px 6px rgba(31,42,86,.18);cursor:pointer}
+.fav:hover{transform:scale(1.08)}
 .fav[aria-pressed="true"]{background:var(--rose);color:var(--ink)}
 .pc h3{font:700 .9rem/1.3 "Quicksand",sans-serif;margin:9px 3px 6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em}
 .prow{display:flex;align-items:center;justify-content:space-between;gap:6px;margin:auto 3px 2px}
@@ -504,6 +505,7 @@ const ZOOM=2.6;
 document.addEventListener("mousemove",e=>{
   const box=e.target.closest(".pimg[data-open]");if(!box)return;
   const img=box.querySelector("img"),lens=box.querySelector(".lens");if(!img||!lens)return;
+  if(e.target.closest(".fav,.tag")){lens.classList.remove("on");return}
   const r=box.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
   lens.classList.add("on");
   lens.style.backgroundImage=`url("${img.currentSrc||img.src}")`;
@@ -556,7 +558,7 @@ $("#checkout-form").addEventListener("submit",async e=>{
     const r=await fetch("/api/checkout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({items,buyer,cfToken})});
     const d=await r.json();
     if(d.paymentPageUrl){location.href=d.paymentPageUrl;return}
-    err.textContent=(d.error||"Ödeme başlatılamadı.")+(d.code?" ("+d.code+")":"");
+    err.textContent=d.error||"Ödeme başlatılamadı.";
   }catch(ex){err.textContent="Bağlantı hatası, tekrar deneyin."}
   if(tsKey&&window.turnstile&&tsWidget!=null)window.turnstile.reset(tsWidget);
   btn.disabled=false;btn.textContent="iyzico ile öde";
