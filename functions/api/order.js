@@ -23,7 +23,7 @@ export async function onRequestPost({ request, env }) {
   if (!(await turnstileOk(env, b.cfToken, ip))) return json({ error: "Güvenlik doğrulaması başarısız. Lütfen doğrulamayı tamamlayıp tekrar deneyin." }, 403);
 
   // ---- sepet ve alıcı ----
-  const { lines, total } = priceCart(b.items);
+  const { lines, total } = priceCart(b.items, env);
   if (!lines.length) return json({ error: "Sepet boş veya geçersiz." }, 400);
   const clip = (v, n) => String(v ?? "").trim().slice(0, n);
   const buyer = {
