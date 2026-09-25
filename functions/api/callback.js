@@ -1,5 +1,8 @@
-// POST /api/callback — iyzico ödeme sonrası buraya token ile döner; sonucu doğrulayıp sayfa gösterir.
-export async function onRequestPost({ request, env }) {
+// POST /api/callback — iyzico ödeme sonrası buraya token ile döner; sonucu doğrulayıp sayfa gösterir,
+// ödeme başarılıysa info@mddstudio.co adresine "SİPARİŞ" maili gönderir.
+import { openOrder, sendOrderMail } from "../_order.js";
+
+export async function onRequestPost({ request, env, waitUntil }) {
   const apiKey = env.IYZICO_API_KEY, secretKey = env.IYZICO_SECRET_KEY;
   const BASE = (env.IYZICO_BASE_URL || "https://sandbox-api.iyzipay.com").replace(/\/$/, "");
 
@@ -22,6 +25,13 @@ export async function onRequestPost({ request, env }) {
   } catch { return page(false, "iyzico'ya ulaşılamadı."); }
 
   const ok = data.status === "success" && data.paymentStatus === "SUCCESS";
+  if (ok) {
+    const sealed = new URL(request.url).searchParams.get("o");
+    const order = sealed ? await openOrder(secretKey, sealed) : null;
+    const live = !BASE.includes("sandbox");
+    const job = sendOrderMail(env, { payment: data, order, live }).catch(e => console.log("order mail failed", e && e.message));
+    if (typeof waitUntil === "function") waitUntil(job); else await job;
+  }
   const detail = ok
     ? `Ödemeniz alındı. Sipariş referansı: <b>${esc(data.paymentId || data.token)}</b><br>Tutar: <b>${esc(data.paidPrice || "")} ₺</b>`
     : esc(data.errorMessage || (data.paymentStatus ? "Ödeme tamamlanamadı: " + data.paymentStatus : "Ödeme tamamlanamadı."));
