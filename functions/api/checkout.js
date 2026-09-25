@@ -97,16 +97,20 @@ export async function onRequestPost({ request, env }) {
   const bodyStr = JSON.stringify(reqBody);
   const { authorization, rnd } = await iyziAuth(apiKey, secretKey, uriPath, bodyStr);
 
-  let data;
+  // Not: 5xx dönülürse Cloudflare kendi "Bad gateway" sayfasını gösterebiliyor; bu yüzden hata 424 ile ve açıklamayla döner.
+  let data, resp, raw = "";
   try {
-    const resp = await fetch(BASE + uriPath, {
+    resp = await fetch(BASE + uriPath, {
       method: "POST",
       headers: { "Content-Type": "application/json", "Authorization": authorization, "x-iyzi-rnd": rnd },
       body: bodyStr,
     });
-    data = await resp.json();
+    raw = await resp.text();
+    data = JSON.parse(raw);
   } catch (e) {
-    return json({ error: "iyzico'ya ulaşılamadı." }, 502);
+    const detail = resp ? `HTTP ${resp.status}: ${raw.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 120)}` : String(e && e.message || e);
+    console.log("iyzico init failed", BASE, detail);
+    return json({ error: "Ödeme sağlayıcısına şu an ulaşılamıyor, lütfen biraz sonra tekrar deneyin.", code: "PAY_UPSTREAM", detail }, 424);
   }
 
   if (data.status !== "success") {
