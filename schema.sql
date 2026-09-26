@@ -38,3 +38,23 @@ CREATE TABLE IF NOT EXISTS rate_limits (
   count INTEGER NOT NULL,
   window_start INTEGER NOT NULL
 );
+
+-- Siparişler (havale/EFT ve ileride kartlı ödeme)
+-- status: awaiting_payment → paid → invoiced | cancelled
+CREATE TABLE IF NOT EXISTS orders (
+  id TEXT PRIMARY KEY,                 -- sipariş no (MDD...)
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL,
+  status TEXT NOT NULL,
+  pay_method TEXT NOT NULL,            -- havale | kart
+  user_id TEXT,
+  buyer_json TEXT NOT NULL,
+  lines_json TEXT NOT NULL,
+  total INTEGER NOT NULL,
+  admin_token_hash TEXT NOT NULL,      -- mağaza e-postasındaki yönetim bağlantısının özeti
+  paid_at INTEGER,
+  invoice_no TEXT,
+  invoice_uuid TEXT,
+  invoice_error TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_orders_created ON orders(created_at);
