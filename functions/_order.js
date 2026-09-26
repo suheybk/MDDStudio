@@ -22,13 +22,22 @@ export const CATALOG = {
 
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
+// KDV oranı (%) ürün grubuna göre: m = sticker, u = defter, e = kart. Fiyatlar KDV dâhildir.
+// Muhasebenin bildireceği oranlar Cloudflare'de KDV_RATES ile verilir, örn. {"m":20,"u":10,"e":20}
+export function kdvRate(env, id) {
+  let rates = {};
+  try { rates = JSON.parse((env && env.KDV_RATES) || "{}"); } catch {}
+  const r = rates[id] ?? rates[String(id)[0]] ?? rates.default ?? 20;
+  return Number(r);
+}
+
 // Sepeti katalogla doğrular: [{id, qty}] → satırlar ve toplam
-export function priceCart(items) {
+export function priceCart(items, env) {
   const lines = [];
   for (const it of Array.isArray(items) ? items : []) {
     const prod = CATALOG[it && it.id];
     const q = Math.max(1, Math.min(99, parseInt(it && it.qty) || 0));
-    if (prod) lines.push({ id: String(it.id), n: prod.n, q, p: prod.p * q });
+    if (prod) lines.push({ id: String(it.id), n: prod.n, q, p: prod.p * q, kdv: kdvRate(env, it.id) });
   }
   return { lines, total: lines.reduce((a, l) => a + l.p, 0) };
 }

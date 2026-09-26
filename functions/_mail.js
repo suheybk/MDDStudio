@@ -1,10 +1,12 @@
 // Ortak e-posta gönderimi (Cloudflare Email Service).
 // Önce EMAIL (send_email) bağlantısı, yoksa CF_EMAIL_TOKEN ile REST API kullanılır.
 // DEV_MAIL_LOG tanımlıysa (yalnızca yerel test) mail gönderilmez, konsola yazılır.
-export async function sendMail(env, { to, subject, text, html, from }) {
+// attachments: [{ filename, content (base64), type }] — toplam en fazla 5 MiB
+export async function sendMail(env, { to, subject, text, html, from, attachments }) {
   const msg = { to, from: from || env.MAIL_FROM || "info@mddstudio.co", subject, text, html };
+  if (attachments && attachments.length) msg.attachments = attachments.map(a => ({ disposition: "attachment", ...a }));
   if (env.DEV_MAIL_LOG) {
-    console.log("DEV_MAIL", JSON.stringify({ to, subject, text }));
+    console.log("DEV_MAIL", JSON.stringify({ to, subject, text, attachments: (attachments || []).map(a => `${a.filename} (${a.content.length} b64)`) }));
     return true;
   }
   if (env.EMAIL && typeof env.EMAIL.send === "function") {
