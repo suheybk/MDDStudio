@@ -133,11 +133,20 @@ export async function rateLimit(env, key, limit, windowSec) {
   const row = await env.DB.prepare("SELECT count, window_start FROM rate_limits WHERE key = ?").bind(key).first();
   if (!row || t - row.window_start >= windowSec) {
     await env.DB.prepare("INSERT OR REPLACE INTO rate_limits (key, count, window_start) VALUES (?, 1, ?)").bind(key, t).run();
+    // Ara sıra temizlik: 24 saatten eski deneme kayıtları, süresi dolmuş oturum ve bağlantılar silinir
+    if (Math.random() < 0.05) await cleanup(env, t).catch(() => {});
     return true;
   }
   if (row.count >= limit) return false;
   await env.DB.prepare("UPDATE rate_limits SET count = count + 1 WHERE key = ?").bind(key).run();
   return true;
+}
+async function cleanup(env, t) {
+  await env.DB.batch([
+    env.DB.prepare("DELETE FROM rate_limits WHERE window_start < ?").bind(t - 86400),
+    env.DB.prepare("DELETE FROM sessions WHERE expires_at < ?").bind(t),
+    env.DB.prepare("DELETE FROM tokens WHERE expires_at < ?").bind(t - 86400),
+  ]);
 }
 export const clientIp = request => request.headers.get("cf-connecting-ip") || "0.0.0.0";
 

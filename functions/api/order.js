@@ -1,8 +1,9 @@
-// POST /api/order — sipariş talebi (çevrimiçi ödeme altyapısı bağlanana kadar).
-// Sepet sunucuda katalogla doğrulanır, mağazaya "SİPARİŞ TALEBİ" ve müşteriye onay maili gider.
+// POST /api/order — havale/EFT ile sipariş.
+// Sepet sunucuda katalogla doğrulanır, sipariş veritabanına yazılır; müşteriye IBAN'lı onay, mağazaya
+// "Ödeme geldi → faturayı kes" bağlantılı sipariş maili gider (bkz. functions/api/admin/order.js).
 // Korumalar: gerçek IP zorunlu, Tor engeli, ülke/IP kısıtı, Turnstile CAPTCHA, IP başına deneme sınırı.
-import { priceCart, sendOrderRequestMails } from "../_order.js";
-import { json, readJson, turnstileOk, rateLimit, normEmail, validEmail, normPhone } from "../_auth.js";
+import { priceCart, sendHavaleOrderMails, payee } from "../_order.js";
+import { json, readJson, turnstileOk, rateLimit, normEmail, validEmail, normPhone, randomToken, sha256, now, currentUser, siteUrl } from "../_auth.js";
 
 export async function onRequestPost({ request, env }) {
   const b = await readJson(request);
@@ -36,6 +37,19 @@ export async function onRequestPost({ request, env }) {
   if (!normPhone(buyer.phone)) return json({ error: "Telefonu 05xx xxx xx xx biçiminde girin." }, 400);
 
   const orderNo = "MDD" + Date.now().toString(36).toUpperCase() + Math.floor(Math.random() * 90 + 10);
-  await sendOrderRequestMails(env, { orderNo, buyer, lines, total });
-  return json({ ok: true, orderNo, total });
+  // Siparişi kaydet; mağaza e-postasındaki yönetim bağlantısı için tek kullanımlık olmayan gizli anahtar
+  let adminUrl = null;
+  if (env.DB) {
+    try {
+      const token = randomToken(), t = now();
+      const user = await currentUser(env, request).catch(() => null);
+      await env.DB.prepare(`INSERT INTO orders (id, created_at, updated_at, status, pay_method, user_id, buyer_json, lines_json, total, admin_token_hash)
+        VALUES (?, ?, ?, 'awaiting_payment', 'havale', ?, ?, ?, ?, ?)`)
+        .bind(orderNo, t, t, user ? user.id : null, JSON.stringify(buyer), JSON.stringify(lines), total, await sha256(token)).run();
+      adminUrl = `${siteUrl(env, request)}/api/admin/order?no=${encodeURIComponent(orderNo)}&t=${token}`;
+    } catch (e) { console.log("order save failed", e && e.message); }
+  }
+  await sendHavaleOrderMails(env, { orderNo, buyer, lines, total, adminUrl });
+  const p = payee(env);
+  return json({ ok: true, orderNo, total, payee: { iban: p.iban, name: p.name, bank: p.bank } });
 }
