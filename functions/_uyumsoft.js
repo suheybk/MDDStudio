@@ -7,7 +7,7 @@
 //   UYUMSOFT_PASSWORD  web servis şifresi (Secret)           — canlıda zorunlu
 //   SELLER_*           (isteğe bağlı) faturadaki satıcı bilgilerini değiştirmek için; varsayılanlar aşağıdaki SELLER
 //   INVOICE_SERIES     3 karakterli seri öneki (örn. MDD); boşsa Uyumsoft'un varsayılan e-arşiv internet serisi
-//   SHIP_CARRIER_VKN, SHIP_CARRIER_NAME                     — kargo firması (internet satışı bilgisi)
+//   SHIP_CARRIER_VKN, SHIP_CARRIER_NAME                     — kargo firması (varsayılan Yurtiçi Kargo)
 
 const TEST_URL = "https://efaturaws-test.uyum.com.tr/Services/Integration";
 const LIVE_URL = "https://edonusumapi.uyum.com.tr/Services/Integration";
@@ -117,7 +117,9 @@ export function buildInvoiceXml(env, order) {
 // Ödeme onaylandıktan sonra çağrılır: faturayı keser, { uuid, number, scenario } döner.
 export async function sendInvoice(env, order) {
   const payDate = (order.paidAt || new Date()).toISOString();
-  const carrier = env.SHIP_CARRIER_NAME ? `<ShipmentInfo><SendDate xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/><Carier SenderTcknVkn="${x(env.SHIP_CARRIER_VKN || "")}" SenderName="${x(env.SHIP_CARRIER_NAME)}"/></ShipmentInfo>` : "";
+  // Taşıyıcı: Geliver üzerinden Yurtiçi Kargo (varsayılan); SHIP_CARRIER_NAME / SHIP_CARRIER_VKN ile değiştirilebilir
+  const carrierName = env.SHIP_CARRIER_NAME || "YURTİÇİ KARGO SERVİSİ A.Ş.", carrierVkn = env.SHIP_CARRIER_VKN || "9860008925";
+  const carrier = `<ShipmentInfo><SendDate xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/><Carier SenderTcknVkn="${x(carrierVkn)}" SenderName="${x(carrierName)}"/></ShipmentInfo>`;
   const info = `<InvoiceInfo LocalDocumentId="${x(order.orderNo)}">${buildInvoiceXml(env, order)}`
     + `<EArchiveInvoiceInfo DeliveryType="Electronic"><InternetSalesInfo><WebAddress>${x(env.SELLER_WEB || "https://mddstudio.co")}</WebAddress><PaymentMidierName>${x(order.paymentMidier || "Vakıf Katılım")}</PaymentMidierName><PaymentType>${x(order.paymentType || "KREDIKARTI/BANKAKARTI")}</PaymentType><PaymentDate>${payDate}</PaymentDate>${carrier}</InternetSalesInfo></EArchiveInvoiceInfo>`
     + `<Scenario>Automated</Scenario><CreateDateUtc>${new Date().toISOString()}</CreateDateUtc></InvoiceInfo>`;

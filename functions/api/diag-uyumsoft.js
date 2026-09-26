@@ -1,12 +1,16 @@
-// GEÇİCİ: Cloudflare'den Uyumsoft TEST servisine erişim kontrolü (herkese açık test kullanıcısıyla). Kontrolden sonra silinecek.
+// GEÇİCİ: Cloudflare'den Uyumsoft erişim kontrolü. Yalnızca sorgu (IsEInvoiceUser) yapar, fatura KESMEZ. Kontrolden sonra silinecek.
 import { isEInvoiceUser } from "../_uyumsoft.js";
 
-export async function onRequestGet() {
+async function check(env) {
   const t = Date.now();
-  try {
-    const v = await isEInvoiceUser({}, "9000068418");
-    return Response.json({ ok: true, isEInvoiceUser: v, ms: Date.now() - t });
-  } catch (e) {
-    return Response.json({ ok: false, error: String(e && e.message || e), ms: Date.now() - t }, { status: 424 });
-  }
+  try { return { ok: true, value: await isEInvoiceUser(env, "2951167976"), ms: Date.now() - t }; }
+  catch (e) { return { ok: false, error: String(e && e.message || e).slice(0, 160), ms: Date.now() - t }; }
+}
+
+export async function onRequestGet({ env }) {
+  const test = await check({});
+  const live = env.UYUMSOFT_USER && env.UYUMSOFT_PASSWORD
+    ? await check({ UYUMSOFT_ENV: "live", UYUMSOFT_USER: env.UYUMSOFT_USER, UYUMSOFT_PASSWORD: env.UYUMSOFT_PASSWORD })
+    : { ok: false, error: "canlı kullanıcı/şifre tanımlı değil" };
+  return Response.json({ test, live, liveMode: env.UYUMSOFT_ENV === "live" });
 }
