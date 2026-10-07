@@ -1,0 +1,48 @@
+/* MDD Studio · Boyama AR — arayüz (tek renk: siyah, beyaz, kâğıt grisi) */
+html, body { margin: 0; height: 100%; background: #000; overscroll-behavior: none; }
+.ar-kok {
+  position: fixed; inset: 0; overflow: hidden; isolation: isolate;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+  color: #111; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none;
+}
+.ar-sahne { position: absolute; inset: 0; overflow: hidden; isolation: isolate; background: #000; touch-action: none; }
+.ar-sahne canvas { display: block; }
+
+.ar-giris {
+  position: absolute; inset: 0; z-index: 5; display: grid; place-items: center;
+  padding: 24px 16px; background: #ecebe7; overflow: auto; transition: opacity .35s;
+}
+.ar-giris.gizle { opacity: 0; pointer-events: none; }
+.ar-kart { width: min(100%, 340px); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; }
+.ar-marka { font-size: 12px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
+.ar-kucuk { width: 150px; height: auto; background: #fff; border: 1.5px solid #111; border-radius: 6px; transform: rotate(-2deg); box-shadow: 5px 6px 0 #111; margin: 6px 0 10px; }
+.ar-baslik { margin: 0; font-size: 24px; line-height: 1.2; font-weight: 700; text-wrap: balance; }
+.ar-not { margin: 0; font-size: 15px; line-height: 1.45; color: #333; text-wrap: pretty; }
+.ar-kucuk-not { font-size: 13px; padding: 10px 12px; border: 1.5px dashed #111; border-radius: 10px; }
+.ar-basla, .ar-ikincil { font: inherit; cursor: pointer; border-radius: 999px; min-height: 48px; padding: 0 26px; }
+.ar-basla { width: 100%; margin-top: 6px; background: #111; color: #fff; border: 0; font-size: 17px; font-weight: 600; }
+.ar-basla:disabled { opacity: .6; }
+.ar-ikincil { background: none; border: 0; color: #111; font-size: 15px; text-decoration: underline; text-underline-offset: 3px; }
+.ar-basla:focus-visible, .ar-ikincil:focus-visible, .ar-dugme:focus-visible { outline: 3px solid #fff; outline-offset: 2px; box-shadow: 0 0 0 6px #111; }
+
+.ar-ipucu, .ar-uyari {
+  position: absolute; left: 50%; transform: translate(-50%, 8px); z-index: 3; max-width: calc(100% - 32px); box-sizing: border-box;
+  padding: 10px 16px; border-radius: 999px; background: rgba(17,17,17,.82); color: #fff;
+  font-size: 15px; line-height: 1.35; text-align: center; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s;
+}
+.ar-ipucu { top: calc(16px + env(safe-area-inset-top)); }
+.ar-uyari { bottom: calc(92px + env(safe-area-inset-bottom)); border-radius: 16px; background: #fff; color: #111; border: 1.5px solid #111; }
+.ar-ipucu.acik, .ar-uyari.acik { opacity: 1; transform: translate(-50%, 0); }
+
+.ar-dugmeler {
+  position: absolute; left: 0; right: 0; bottom: calc(18px + env(safe-area-inset-bottom)); z-index: 3;
+  display: none; justify-content: center; gap: 14px;
+}
+.ar-dugmeler.acik { display: flex; }
+.ar-dugme {
+  width: 56px; height: 56px; border-radius: 50%; border: 1.5px solid #111; background: #fff; color: #111;
+  display: grid; place-items: center; cursor: pointer; padding: 0;
+}
+.ar-dugme:active { transform: scale(.94); }
+.ar-dugme svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+@media (prefers-reduced-motion: reduce) { .ar-giris, .ar-ipucu, .ar-uyari { transition: none; } }
