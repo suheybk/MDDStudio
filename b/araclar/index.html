@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Boyama AR Araçları · MDD Studio</title>
+<style>
+  :root { --kagit: #ecebe7; --murekkep: #111; --soluk: #5c5c58; --vurgu: #c2410c; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--kagit); color: var(--murekkep); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 1080px; margin: 0 auto; padding: 28px 16px 64px; }
+  .marka { font-size: 12px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
+  h1 { font-size: 28px; line-height: 1.15; margin: 6px 0 4px; }
+  h2 { font-size: 17px; margin: 0 0 6px; }
+  p { margin: 0 0 10px; color: var(--soluk); max-width: 62ch; }
+  .duzen { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 360px); gap: 20px; margin-top: 20px; align-items: start; }
+  @media (max-width: 780px) { .duzen { grid-template-columns: 1fr; } }
+  .tuval-kap { background: #fff; border: 1.5px solid var(--murekkep); border-radius: 8px; padding: 10px; min-height: 240px; display: grid; place-items: center; }
+  .tuval-kap.surukle { outline: 3px dashed var(--murekkep); outline-offset: 3px; }
+  canvas { max-width: 100%; height: auto; display: block; cursor: crosshair; }
+  .bos { color: var(--soluk); text-align: center; padding: 40px 12px; }
+  section { background: #fff; border: 1.5px solid var(--murekkep); border-radius: 8px; padding: 14px; margin-bottom: 14px; }
+  button, .dosya { font: inherit; font-weight: 600; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid var(--murekkep); background: var(--murekkep); color: #fff; cursor: pointer; display: inline-flex; align-items: center; }
+  button.ikincil { background: #fff; color: var(--murekkep); }
+  button:disabled { opacity: .45; cursor: default; }
+  button:focus-visible, .dosya:focus-within { outline: 3px solid var(--vurgu); outline-offset: 2px; }
+  .dosya input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 10px 0 0; font-variant-numeric: tabular-nums; }
+  dt { color: var(--soluk); } dd { margin: 0; font-weight: 600; }
+  textarea { width: 100%; min-height: 150px; font: 13px/1.5 ui-monospace, Menlo, Consolas, monospace; border: 1.5px solid var(--murekkep); border-radius: 6px; padding: 8px; resize: vertical; }
+  progress { width: 100%; height: 10px; accent-color: var(--murekkep); margin-top: 10px; }
+  .satir { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .karar { margin-top: 10px; padding: 8px 10px; border-radius: 6px; border: 1.5px solid var(--murekkep); font-weight: 600; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "../motor/vendor/three.module.min.js", "three/addons/": "../motor/vendor/addons/" } }
+</script>
+</head>
+<body>
+<main>
+  <div class="marka">MDD Studio · Boyama AR</div>
+  <h1>Sayfa hazırlama araçları</h1>
+  <p>Bir boyama sayfasının baskıya giden son hâlini (QR kodu dâhil) buraya bırak. Buradan <b>hedef.mind</b> dosyasını üretir ve efekt koordinatlarını tıklayarak alırsın. Görsel bilgisayarından çıkmaz; her şey tarayıcıda hesaplanır.</p>
+
+  <div class="duzen">
+    <div>
+      <div class="tuval-kap" id="kap">
+        <div class="bos" id="bos">
+          <label class="dosya">Görsel seç<input type="file" id="dosya" accept="image/png,image/jpeg,image/webp"></label>
+          <p style="margin-top:10px">ya da görseli bu kutuya sürükle</p>
+        </div>
+        <canvas id="tuval" hidden></canvas>
+      </div>
+    </div>
+
+    <div>
+      <section>
+        <h2>1 · Hedef dosyası</h2>
+        <p>Kameranın sayfayı tanımasını sağlayan dosya. Görsel değişirse (QR dâhil) yeniden üret. Turuncu noktalar kameranın tutunduğu yerleri gösterir.</p>
+        <button id="uret" disabled>hedef.mind üret</button>
+        <progress id="ilerleme" max="100" value="0" hidden></progress>
+        <dl id="bilgi" hidden>
+          <dt>Boyut</dt><dd id="b-boyut">–</dd>
+          <dt>oran</dt><dd id="b-oran">–</dd>
+          <dt>Tanıma noktası</dt><dd id="b-nokta">–</dd>
+        </dl>
+        <div class="karar" id="karar" hidden></div>
+      </section>
+
+      <section>
+        <h2>2 · Koordinat al</h2>
+        <p>Görselde bir yere tıkla; x ve y değeri aşağıya eklenir. Bunları <b>sayfa.json</b> içindeki kandil, etiket ve benzeri satırlara yapıştır.</p>
+        <textarea id="liste" spellcheck="false" aria-label="Tıklanan koordinatlar"></textarea>
+        <div class="satir">
+          <button class="ikincil" id="kopya">Kopyala</button>
+          <button class="ikincil" id="temizle">Temizle</button>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script type="module">
+import { Compiler } from '../motor/vendor/mindar/mindar-image.prod.js';
+
+const $ = (k) => document.getElementById(k);
+const tuval = $('tuval');
+const g = tuval.getContext('2d');
+let resim = null;
+let dosyaAdi = 'hedef';
+let tiklar = [];
+let noktalar = null; // { tanima: [[x,y]...], takip: [[x,y]...] }
+
+function ciz() {
+  if (!resim) return;
+  g.drawImage(resim, 0, 0);
+  const b = Math.max(2, tuval.width / 300);
+  if (noktalar) {
+    g.fillStyle = 'rgba(194,65,12,.75)';
+    for (const [x, y] of noktalar.tanima) { g.beginPath(); g.arc(x, y, b, 0, 7); g.fill(); }
+  }
+  g.font = `600 ${b * 7}px system-ui, sans-serif`;
+  tiklar.forEach(([x, y], i) => {
+    const px = x * tuval.width, py = y * tuval.height;
+    g.fillStyle = '#111'; g.beginPath(); g.arc(px, py, b * 3.2, 0, 7); g.fill();
+    g.strokeStyle = '#fff'; g.lineWidth = b * 0.8; g.stroke();
+    g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText(String(i + 1), px, py + b * 0.3);
+  });
+}
+
+async function yukle(dosya) {
+  if (!dosya || !dosya.type.startsWith('image/')) return;
+  dosyaAdi = dosya.name.replace(/\.[^.]+$/, '');
+  const im = new Image();
+  im.src = URL.createObjectURL(dosya);
+  await im.decode();
+  resim = im; tiklar = []; noktalar = null;
+  tuval.width = im.naturalWidth; tuval.height = im.naturalHeight;
+  tuval.hidden = false; $('bos').hidden = true;
+  $('uret').disabled = false;
+  $('bilgi').hidden = false; $('karar').hidden = true;
+  $('b-boyut').textContent = `${im.naturalWidth} × ${im.naturalHeight} px`;
+  $('b-oran').textContent = (im.naturalHeight / im.naturalWidth).toFixed(4);
+  $('b-nokta').textContent = '–';
+  $('liste').value = '';
+  ciz();
+}
+$('dosya').addEventListener('change', (e) => yukle(e.target.files[0]));
+const kap = $('kap');
+kap.addEventListener('dragover', (e) => { e.preventDefault(); kap.classList.add('surukle'); });
+kap.addEventListener('dragleave', () => kap.classList.remove('surukle'));
+kap.addEventListener('drop', (e) => { e.preventDefault(); kap.classList.remove('surukle'); yukle(e.dataTransfer.files[0]); });
+
+tuval.addEventListener('click', (e) => {
+  const k = tuval.getBoundingClientRect();
+  const x = +((e.clientX - k.left) / k.width).toFixed(3);
+  const y = +((e.clientY - k.top) / k.height).toFixed(3);
+  tiklar.push([x, y]);
+  $('liste').value += `${tiklar.length}:  "x": ${x}, "y": ${y}\n`;
+  ciz();
+});
+$('temizle').addEventListener('click', () => { tiklar = []; $('liste').value = ''; ciz(); });
+$('kopya').addEventListener('click', () => navigator.clipboard?.writeText($('liste').value));
+
+$('uret').addEventListener('click', async () => {
+  const d = $('uret'), il = $('ilerleme');
+  d.disabled = true; il.hidden = false; il.value = 0;
+  try {
+    const derleyici = new Compiler();
+    const veri = await derleyici.compileImageTargets([resim], (y) => { il.value = y; });
+    const ilk = veri[0];
+    // En büyük ölçekteki noktaları görsel üzerine çiz.
+    const buyuk = ilk.matchingData.reduce((a, b) => (b.scale > a.scale ? b : a));
+    const tanima = [...buyuk.maximaPoints, ...buyuk.minimaPoints].map((p) => [p.x / buyuk.scale, p.y / buyuk.scale]);
+    const toplam = ilk.matchingData.reduce((n, m) => n + m.maximaPoints.length + m.minimaPoints.length, 0);
+    noktalar = { tanima };
+    $('b-nokta').textContent = String(toplam);
+    const karar = $('karar');
+    karar.hidden = false;
+    karar.textContent = toplam >= 1000
+      ? 'Detay yeterli. Boyanınca da tanınması için sayfada boyanamayan dolu çerçeve olmalı.'
+      : toplam >= 400
+        ? 'Detay orta. Boş sayfa tanınır; çerçeve ya da ek desen tanımayı güçlendirir.'
+        : 'Detay az. Çizime desen ekle ya da tanıma çerçevesini kullan.';
+    document.body.dataset.nokta = toplam;
+    ciz();
+    const tampon = await derleyici.exportData();
+    const blob = new Blob([tampon]);
+    window.__hedef = blob; // otomasyon ve yeniden indirme için
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'hedef.mind';
+    a.click();
+  } catch (h) {
+    console.error(h);
+    const karar = $('karar');
+    karar.hidden = false;
+    karar.textContent = 'Üretilemedi: ' + (h?.message || h);
+  } finally {
+    d.disabled = false; il.hidden = true;
+  }
+});
+</script>
+</body>
+</html>
