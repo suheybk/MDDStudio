@@ -1,0 +1,38 @@
+{
+  "baslik": {
+    "tr": "Mihrap ve Minber",
+    "en": "Mihrab and Minbar",
+    "ar": "المحراب والمنبر",
+    "id": "Mihrab dan Mimbar"
+  },
+  "gorsel": "sayfa.png",
+  "hedef": "hedef.mind",
+  "oran": 1.4341,
+  "sahne": [
+    { "tip": "gece", "t": 0.3, "koyuluk": 0.55, "renk": "#0a1030" },
+
+    { "tip": "kandil", "t": 1.6, "x": 0.455, "y": 0.290, "r": 0.075 },
+    { "tip": "kandil", "t": 2.1, "x": 0.524, "y": 0.327, "r": 0.085 },
+    { "tip": "kandil", "t": 2.6, "x": 0.589, "y": 0.380, "r": 0.095 },
+    { "tip": "kandil", "t": 3.1, "x": 0.652, "y": 0.312, "r": 0.075 },
+
+    { "tip": "nur", "t": 3.8, "x": 0.337, "y": 0.540, "w": 0.34, "h": 0.60, "renk": "#ffe7a3" },
+
+    { "tip": "parilti", "t": 5.0, "adet": 34, "boy": 0.055,
+      "alan": [[0.218, 0.681], [0.475, 0.680], [0.579, 0.761], [0.215, 0.762]] },
+
+    { "tip": "yildiz", "t": 5.6, "x": 0.076, "y": 0.061, "r": 0.045 },
+    { "tip": "yildiz", "t": 5.7, "x": 0.935, "y": 0.061, "r": 0.045, "hiz": -0.5 },
+    { "tip": "yildiz", "t": 5.8, "x": 0.076, "y": 0.967, "r": 0.045, "hiz": -0.5 },
+    { "tip": "yildiz", "t": 5.9, "x": 0.935, "y": 0.967, "r": 0.045 },
+
+    { "tip": "etiket", "t": 6.8, "x": 0.337, "y": 0.285, "ex": 0.25, "ey": 0.19,
+      "metin": { "tr": "Mihrap", "en": "Mihrab", "ar": "محراب", "id": "Mihrab" } },
+    { "tip": "etiket", "t": 7.6, "x": 0.672, "y": 0.300, "ex": 0.80, "ey": 0.19,
+      "metin": { "tr": "Kandil", "en": "Oil lamp", "ar": "قنديل", "id": "Kandil" } },
+    { "tip": "etiket", "t": 8.4, "x": 0.764, "y": 0.640, "ex": 0.80, "ey": 0.725,
+      "metin": { "tr": "Minber", "en": "Minbar", "ar": "منبر", "id": "Mimbar" } },
+    { "tip": "etiket", "t": 9.2, "x": 0.360, "y": 0.750, "ex": 0.30, "ey": 0.86,
+      "metin": { "tr": "Seccade", "en": "Prayer rug", "ar": "سجّادة", "id": "Sajadah" } }
+  ]
+}
